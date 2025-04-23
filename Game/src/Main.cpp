@@ -1,52 +1,15 @@
-/*******************************************************************************************
-*
-*   raylib [core] example - Basic window
-*
-*   Welcome to raylib!
-*
-*   To test examples, just press F6 and execute raylib_compile_execute script
-*   Note that compiled executable is placed in the same folder as .c file
-*
-*   You can find all basic examples on C:\raylib\raylib\examples folder or
-*   raylib official webpage: www.raylib.com
-*
-*   Enjoy using raylib. :)
-*
-*   This example has been created using raylib 1.0 (www.raylib.com)
-*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
-*
-*   Copyright (c) 2014 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
-#include "core/core.h"
+#include "core/raylib_cpp.h"
+#include "core/EntityManager.h"
+#include "Circle.h"
+#include "core/GameLoop.h"
 
 int main() {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    int screenWidth = 800;
-    int screenHeight = 450;
-    raylib::Color textColor = raylib::Color::LightGray();
-    raylib::Window window(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-    SetTargetFPS(60);
-    //--------------------------------------------------------------------------------------
+	Circle* circle = new Circle(RVector2(30, 30), 20, raylib::Color::Red());
 
-    // Main game loop
-    while (!window.ShouldClose()) {   // Detect window close button or ESC key
-        // Update
-        //----------------------------------------------------------------------------------
-        // Update your variables here
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
-        while (window.Drawing()) {
-            window.ClearBackground(RAYWHITE);
-            textColor.DrawText("Congrats! You created your first window!", 190, 200, 20);
-        }
-        //----------------------------------------------------------------------------------
-    }
+	EntityManager::GetInstance()->AddEntity(circle);
+    
+	GameLoop::GetInstance()->Run();
 
     return 0;
 }

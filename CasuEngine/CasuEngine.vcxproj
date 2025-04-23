@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\tinyxml;$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\tinyxml;$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\tinyxml;$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,7 +155,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)thirdparty\tinyxml;$(ProjectDir)thirdparty\raygui;$(ProjectDir)core;$(ProjectDir)thirdparty\imgui\include;$(ProjectDir)thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,7 +177,11 @@
     <ClInclude Include="core\Camera2D.h" />
     <ClInclude Include="core\Camera3D.h" />
     <ClInclude Include="core\Color.h" />
-    <ClInclude Include="core\core.h" />
+    <ClInclude Include="core\Entity.h" />
+    <ClInclude Include="core\EntityManager.h" />
+    <ClInclude Include="core\GameLoop.h" />
+    <ClInclude Include="core\Observer.h" />
+    <ClInclude Include="core\raylib_cpp.h" />
     <ClInclude Include="core\FileData.h" />
     <ClInclude Include="core\FileText.h" />
     <ClInclude Include="core\Font.h" />
@@ -196,6 +200,7 @@
     <ClInclude Include="core\RenderTexture.h" />
     <ClInclude Include="core\Shader.h" />
     <ClInclude Include="core\ShaderUnmanaged.h" />
+    <ClInclude Include="core\Singleton.h" />
     <ClInclude Include="core\Sound.h" />
     <ClInclude Include="core\Text.h" />
     <ClInclude Include="core\Texture.h" />
@@ -218,6 +223,7 @@
     <ClInclude Include="thirdparty\raylib\include\raylib.h" />
     <ClInclude Include="thirdparty\raylib\include\raymath.h" />
     <ClInclude Include="thirdparty\raylib\include\rlgl.h" />
+    <ClInclude Include="thirdparty\tinyxml\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\imgui\imgui.cpp" />
@@ -226,6 +232,7 @@
     <ClCompile Include="thirdparty\imgui\imgui_tables.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="thirdparty\imgui\rlImGui.cpp" />
+    <ClCompile Include="thirdparty\tinyxml\tinyxml2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

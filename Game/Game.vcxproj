@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Circle.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -95,7 +98,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -114,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,7 +155,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

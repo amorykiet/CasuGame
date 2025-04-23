@@ -1,5 +1,5 @@
-#ifndef CORE_  
-#define CORE_  
+#ifndef RAYLIB_CPP_INCLUDE_RAYLIB_CPP_HPP_  
+#define RAYLIB_CPP_INCLUDE_RAYLIB_CPP_HPP_
 
 #include "AudioDevice.h"  
 #include "AudioStream.h"  
