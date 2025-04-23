@@ -176,6 +176,7 @@
     <ClInclude Include="core\AutomationEventList.h" />
     <ClInclude Include="core\Camera2D.h" />
     <ClInclude Include="core\Camera3D.h" />
+    <ClInclude Include="core\CasuEngineDef.h" />
     <ClInclude Include="core\Color.h" />
     <ClInclude Include="core\Entity.h" />
     <ClInclude Include="core\EntityManager.h" />
