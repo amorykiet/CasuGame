@@ -2,11 +2,6 @@
 #include <vector>
 #include <string>
 
-enum EventDef
-{
-	NONE,
-};
-
 class EventInfo
 {
 public:
@@ -23,7 +18,7 @@ class Observer
 {
 public:
 	virtual ~Observer() {}
-	virtual void OnNotify(const Subject& entity, EventInfo event) = 0;
+	virtual void OnNotify(const Subject& entity) = 0;
 
 private:
 
@@ -48,7 +43,7 @@ protected:
     {
 		for (auto observer : m_observers)
 		{
-			observer->OnNotify(*this, event);
+			observer->OnNotify(*this);
 		}
     }
 

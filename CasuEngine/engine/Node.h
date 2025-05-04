@@ -1,0 +1,41 @@
+#pragma once
+
+#include <vector>
+#include <string>
+
+class SceneTree;
+
+class Node
+{
+public:
+
+	//Callbacks for game logic
+	virtual void _Init();
+	virtual void _Ready();
+	virtual void _Update(float);
+	virtual void _Render();
+
+	void Init();
+	void Ready();
+	void Update(float deltaTime);
+	void Render();
+
+	void SetName(const std::string& name) { this->name = name; }
+	const std::string& GetName() const { return name; }
+	void SetParent(Node* parent) { m_parent = parent; }
+	void SetRoot(SceneTree* root) { m_root = root; }
+	Node* GetParent() { return m_parent; }
+	SceneTree* GetRoot() { return m_root; }
+
+	void AddChild(Node* child);
+	void RemoveChild(Node* child);
+	void Destroy();
+
+protected:
+	std::string name;
+	std::vector<Node*> m_childs;
+	Node* m_parent;
+	SceneTree* m_root;
+};
+
+using Scene = Node;

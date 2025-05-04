@@ -28,11 +28,11 @@
     <Filter Include="Source Files\thirdparty\imgui">
       <UniqueIdentifier>{d0a899ff-ead2-4e2f-824c-eacd2d3a1588}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine">
-      <UniqueIdentifier>{c2ab4b47-ca56-4625-a802-57d0900c08a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\thirdparty\tinyxml">
       <UniqueIdentifier>{27db76b1-0525-4091-8188-90f61a13a204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{c2ab4b47-ca56-4625-a802-57d0900c08a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,25 +177,25 @@
     <ClInclude Include="core\Camera3D.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\GameLoop.h">
-      <Filter>Source Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="core\Singleton.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
     <ClInclude Include="core\Observer.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\Entity.h">
-      <Filter>Source Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="core\EntityManager.h">
-      <Filter>Source Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="thirdparty\tinyxml\tinyxml2.h">
       <Filter>Source Files\thirdparty\tinyxml</Filter>
     </ClInclude>
-    <ClInclude Include="core\CasuEngineDef.h">
+    <ClInclude Include="engine\CasuEngineDef.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Node.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\MainLoop.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\SceneTree.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
@@ -220,6 +220,15 @@
     </ClCompile>
     <ClCompile Include="thirdparty\tinyxml\tinyxml2.cpp">
       <Filter>Source Files\thirdparty\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\MainLoop.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\SceneTree.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Node.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
