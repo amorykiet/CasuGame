@@ -198,6 +198,9 @@
     <ClInclude Include="engine\SceneTree.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="engine\NodePath.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp">

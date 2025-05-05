@@ -1,14 +1,16 @@
 #include "Node.h"
 #include "MainLoop.h"
+#include <sstream>
+#include <algorithm>
 
 void Node::_Init()
 {
-	printf("Init %s\n", name.c_str());
+	//callback for game logic
 }
 
 void Node::_Ready()
 {
-	printf("Ready %s\n", name.c_str());
+	//callback for game logic
 }
 
 void Node::_Update(float)
@@ -22,7 +24,16 @@ void Node::_Render()
 }
 
 void Node::Init()
-{    
+{
+	printf("Init %s\n", m_path.GetPath().c_str());
+	// Construct the path based on the parent's path
+	if (m_parent) {
+		m_path.SetPath(m_parent->m_path.GetPath() + "/" + name);
+	}
+	else {
+		m_path.SetPath(name); // Root node's path is its own name
+	}
+
 	_Init();
 	for (auto child : m_childs) {
 		child->Init();
@@ -31,6 +42,7 @@ void Node::Init()
 
 void Node::Ready()
 {
+	printf("Ready %s\n", m_path.GetPath().c_str());
 	for (auto child : m_childs) {
 		child->Ready();
 	}
@@ -38,7 +50,8 @@ void Node::Ready()
 }
 
 void Node::Update(float deltaTime)
-{    
+{
+	printf("Update %s\n", m_path.GetPath().c_str());
 	// Initialize pending nodes
 	if (!m_pendingInitNodes.empty())
 	{
@@ -49,11 +62,20 @@ void Node::Update(float deltaTime)
 		m_pendingInitNodes.clear();
 	}
 
-
 	for (auto child : m_childs) {
 		child->Update(deltaTime);
 	}
 	_Update(deltaTime);
+
+	// Remove pending nodes
+	if (!m_pendingRemoveNodes.empty())
+	{
+		for (Node* child : m_pendingRemoveNodes) {
+			m_childs.erase(std::remove(m_childs.begin(), m_childs.end(), child), m_childs.end());
+			child->Destroy();
+		}
+		m_pendingRemoveNodes.clear();
+	}
 }
 
 void Node::Render()
@@ -64,14 +86,76 @@ void Node::Render()
 	}
 }
 
+void Node::SetName(const std::string& name)  
+{  
+	this->name = name;  
+	// Validate the name to ensure it's unique among siblings
+	ValidateName(this->name);  
+	if (m_parent) {  
+		m_path.SetPath(m_parent->m_path.GetPath() + "/" + this->name);  
+	}  
+	else {  
+		m_path.SetPath(this->name); // Root node's path is its own name  
+	}  
+
+	// Update the paths of all child nodes recursively  
+	for (auto child : m_childs) {  
+		child->SetName(child->GetName());  
+	}  
+}
+
+std::string Node::GetType()
+{
+	std::string name = typeid(*this).name();
+	std::string prefix = "class ";  // or "struct "
+
+	// Remove "class " prefix if present
+	if (name.compare(0, prefix.length(), prefix) == 0) {
+		name = name.substr(prefix.length());
+	}
+
+	return name;
+}
+
+void Node::ValidateName(std::string& name)
+{
+	// Check if the name is empty
+	if (name.empty()) {
+		name = GetType();
+	}
+    // Check if the name is already taken by another child of the parent
+    if (m_parent) {
+       auto it = std::find_if(m_parent->m_childs.begin(), m_parent->m_childs.end(), [&](Node* sibling) {
+           return sibling != this && sibling->GetName() == name;
+       });
+       if (it != m_parent->m_childs.end()) {
+           // Name is already taken, generate a new unique name
+           std::string baseName = name;
+           int counter = 1;
+           do {
+               name = baseName + std::to_string(counter);
+               counter++;
+               it = std::find_if(m_parent->m_childs.begin(), m_parent->m_childs.end(), [&](Node* sibling) {
+                   return sibling != this && sibling->GetName() == name;
+               });
+           } while (it != m_parent->m_childs.end());
+       }
+    }
+}
+
 void Node::AddChild(Node* child)
 {
 	if (child == nullptr) return;
+
 	child->SetParent(this);
+
 	if (m_root)
 	{
 		child->SetRoot(m_root);
 	}
+
+	// Validate the name to ensure it's unique among siblings
+	child->SetName(child->name);
 	m_childs.push_back(child);
 
 	// dynamically init the child node
@@ -84,13 +168,60 @@ void Node::AddChild(Node* child)
 
 void Node::RemoveChild(Node* child)
 {
-	child->Destroy();
-	delete child;
-	m_childs.erase(std::remove(m_childs.begin(), m_childs.end(), child), m_childs.end());
+	if (child == nullptr) return;
+
+	// Remove the child from the list of children
+	auto it = std::find(m_childs.begin(), m_childs.end(), child);
+	if (it != m_childs.end()) {
+		m_childs.erase(it);
+	}
+
+	// Mark the child for deferred deletion
+	m_pendingRemoveNodes.push_back(child);
+}
+
+
+Node* Node::GetNode(const NodePath& path)
+{
+   // Split the relative path into parts
+   std::string relativePath = path.GetPath();
+   std::istringstream stream(relativePath);
+   std::string segment;
+   Node* currentNode = this;
+
+   while (std::getline(stream, segment, '/')) {
+       if (segment == "..") {
+           // Move to the parent node
+           currentNode = currentNode->m_parent;
+           if (!currentNode) {
+               return nullptr; // Invalid path
+           }
+       } else if (segment != "." && !segment.empty()) {
+           // Search for the child node with the matching name
+           auto it = std::find_if(
+               currentNode->m_childs.begin(),
+               currentNode->m_childs.end(),
+               [&segment](Node* child) { return child->GetName() == segment; });
+
+           if (it == currentNode->m_childs.end()) {
+               return nullptr; // Node not found
+           }
+           currentNode = *it;
+       }
+   }
+
+   return currentNode;
+}
+
+Node* Node::GetNode(const std::string& path)
+{
+	NodePath nodePath(path);
+	return GetNode(nodePath);
 }
 
 void Node::Destroy()
 {
+	printf("Destroy %s\n", m_path.GetPath().c_str());
 	for (auto child : m_childs) {
 		child->Destroy();
 		delete child;
