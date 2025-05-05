@@ -1,14 +1,15 @@
 #include "Node.h"
 #include "MainLoop.h"
+#include <sstream>
 
 void Node::_Init()
 {
-	printf("Init %s\n", name.c_str());
+	printf("Init %s\n", m_path.GetPath().c_str());
 }
 
 void Node::_Ready()
 {
-	printf("Ready %s\n", name.c_str());
+	printf("Ready %s\n", m_path.GetPath().c_str());
 }
 
 void Node::_Update(float)
@@ -22,7 +23,15 @@ void Node::_Render()
 }
 
 void Node::Init()
-{    
+{
+	// Construct the path based on the parent's path
+	if (m_parent) {
+		m_path.SetPath(m_parent->m_path.GetPath() + "/" + name);
+	}
+	else {
+		m_path.SetPath(name); // Root node's path is its own name
+	}
+
 	_Init();
 	for (auto child : m_childs) {
 		child->Init();
@@ -87,6 +96,45 @@ void Node::RemoveChild(Node* child)
 	child->Destroy();
 	delete child;
 	m_childs.erase(std::remove(m_childs.begin(), m_childs.end(), child), m_childs.end());
+}
+
+
+Node* Node::GetNode(const NodePath& path)
+{
+   // Split the relative path into parts
+   std::string relativePath = path.GetPath();
+   std::istringstream stream(relativePath);
+   std::string segment;
+   Node* currentNode = this;
+
+   while (std::getline(stream, segment, '/')) {
+       if (segment == "..") {
+           // Move to the parent node
+           currentNode = currentNode->m_parent;
+           if (!currentNode) {
+               return nullptr; // Invalid path
+           }
+       } else if (segment != "." && !segment.empty()) {
+           // Search for the child node with the matching name
+           auto it = std::find_if(
+               currentNode->m_childs.begin(),
+               currentNode->m_childs.end(),
+               [&segment](Node* child) { return child->GetName() == segment; });
+
+           if (it == currentNode->m_childs.end()) {
+               return nullptr; // Node not found
+           }
+           currentNode = *it;
+       }
+   }
+
+   return currentNode;
+}
+
+Node* Node::GetNode(const std::string& path)
+{
+	NodePath nodePath(path);
+	return GetNode(nodePath);
 }
 
 void Node::Destroy()

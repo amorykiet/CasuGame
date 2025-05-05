@@ -3,7 +3,29 @@
 #include "SceneTree.h"
 #include "core/raylib_cpp.h"
 
-class MyNode : public Node {
+class Bullet : public Node {
+public:
+	void SetPosition(RVector2 pos) {
+		position = pos;
+	}
+	void _Update(float delta) override {
+		position.x += 10.0f * direction * delta;
+	}
+	void _Render() override {
+		DrawCircleV(position, 5.0f, RColor::Blue());
+	}
+
+	void ChangeDirection() {
+		direction *= -1;
+	}
+
+private:
+	RVector2 position;
+	int direction = 1;
+};
+
+
+class Player : public Node {
 public:
 	void SetPosition(RVector2 pos) {
 		position = pos;
@@ -11,42 +33,45 @@ public:
 
 
     void _Update(float delta) override {  
+		
+		//Fire a bullet
+		if (RKeyboard::IsKeyPressed(KEY_SPACE))
+		{
+			Bullet* bullet = new Bullet();
+			bullet->SetName("Bullet");
+			bullet->SetPosition(position);
 
-	   // Check for key press to add a child node
-       if (RKeyboard::IsKeyPressed(KEY_S))  
-       {  
-           MyNode* node = new MyNode();  
-           node->SetName("MyNode1");  
-           node->SetPosition(RVector2(30.0f, 100.0f));  
-           AddChild(node);  
-       }  
+			GetNode("Something")->AddChild(bullet);
+		}
+		
+		//Change direction of bullet
+		if (RKeyboard::IsKeyPressed(KEY_S))
+		{
+			Bullet* bullet = dynamic_cast<Bullet*>(GetNode("Something/Bullet"));
+			if (bullet)
+			{
+				bullet->ChangeDirection();
+			}
+		}
 
-	   // Check for key press to remove a child node
-       if (RKeyboard::IsKeyPressed(KEY_D))  
-       {  
-           Node* child = nullptr;  
-           for (auto& c : m_childs)
-           {  
-               if (c->GetName() == "MyNode1")  
-               {  
-                   child = c;  
-                   break;  
-               }  
-           }  
-           if (child)  
-           {  
-               RemoveChild(child);  
-           }  
-       } 
 
-	   // Auto move the node to the right
-       position.x += 10.0f * delta;
-       
-	   // Move the node to the left
-       if (RKeyboard::IsKeyPressed(KEY_A))
+	   // Move the node
+       if (RKeyboard::IsKeyDown(KEY_LEFT))
        {
-           position.x -= 10.0f;
+           position.x -= 100.0f * delta;
        }
+	   else if (RKeyboard::IsKeyDown(KEY_RIGHT))
+	   {
+		   position.x += 100.0f * delta;
+	   }
+	   else if (RKeyboard::IsKeyDown(KEY_UP))
+	   {
+		   position.y -= 100.0f * delta;
+	   }
+	   else if (RKeyboard::IsKeyDown(KEY_DOWN))
+	   {
+		   position.y += 100.0f * delta;
+	   }
     }
 
 	void _Render() override {
@@ -57,31 +82,22 @@ private:
 	RVector2 position;
 };
 
-
-
 int main() {
 
-	//Create scene tree
-    //  MyNode
-    //  |--node1
-	//  |  |--node3
-	//  |--node2
-	MyNode* node = new MyNode();
-	node->SetName("MyNode");
-	node->SetPosition(RVector2(30.0f, 50.0f));
+	Scene* scene  = new Scene();
+	scene->SetName("MainScene");
 
-	Node* node1 = new Node();
-	node1->SetName("node1");
-	Node* node2 = new Node();
-	node2->SetName("node2");
-	Node* node3 = new Node();
-	node3->SetName("node3");
+	Player* player = new Player();
+	player->SetName("Player");
+	player->SetPosition(RVector2(100, 100));
 
-	node->AddChild(node1);
-	node->AddChild(node2);
-	node1->AddChild(node3);
+	Node* something = new Node();
+	something->SetName("Something");
 
-	SceneTree::GetInstance()->AddScene(node);
+	scene->AddChild(player);
+	player->AddChild(something);
+
+	SceneTree::GetInstance()->AddScene(scene);
 
 	//Run the main loop
 	MainLoop::GetInstance()->Run();

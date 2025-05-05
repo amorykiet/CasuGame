@@ -30,9 +30,14 @@ public:
 
 	void AddChild(Node* child);
 	void RemoveChild(Node* child);
+
+	Node* GetNode(const NodePath& path);
+	Node* GetNode(const std::string& path);
+
 	void Destroy();
 
 protected:
+	NodePath m_path;
 	std::string name;
 	std::vector<Node*> m_childs;
 	Node* m_parent;
