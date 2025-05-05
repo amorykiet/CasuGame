@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NodePath.h"
 #include <vector>
 #include <string>
 
@@ -36,6 +37,7 @@ protected:
 	std::vector<Node*> m_childs;
 	Node* m_parent;
 	SceneTree* m_root;
+	std::vector<Node*> m_pendingInitNodes;
 };
 
 using Scene = Node;

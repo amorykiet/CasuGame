@@ -13,6 +13,8 @@ void MainLoop::Run()
 	//Get the nodes ready from bottom to top, child to parent
 	SceneTree::GetInstance()->Ready();
 
+	isRunning = true;
+
 	while (!WindowShouldClose())
 	{
 		Update(GetFrameTime());
@@ -24,6 +26,8 @@ void MainLoop::Run()
 
 		EndDrawing();
 	}
+
+	isRunning = false;
 
 	Exit();
 

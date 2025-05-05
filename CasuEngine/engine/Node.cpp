@@ -1,5 +1,5 @@
 #include "Node.h"
-
+#include "MainLoop.h"
 
 void Node::_Init()
 {
@@ -22,7 +22,7 @@ void Node::_Render()
 }
 
 void Node::Init()
-{
+{    
 	_Init();
 	for (auto child : m_childs) {
 		child->Init();
@@ -38,7 +38,18 @@ void Node::Ready()
 }
 
 void Node::Update(float deltaTime)
-{
+{    
+	// Initialize pending nodes
+	if (!m_pendingInitNodes.empty())
+	{
+		for (Node* node : m_pendingInitNodes) {
+			node->Init();
+			node->Ready();
+		}
+		m_pendingInitNodes.clear();
+	}
+
+
 	for (auto child : m_childs) {
 		child->Update(deltaTime);
 	}
@@ -62,6 +73,12 @@ void Node::AddChild(Node* child)
 		child->SetRoot(m_root);
 	}
 	m_childs.push_back(child);
+
+	// dynamically init the child node
+	if (MainLoop::GetInstance()->IsRunning())
+	{
+		m_pendingInitNodes.push_back(child);
+	}
 }
 
 
