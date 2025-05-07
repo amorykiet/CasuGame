@@ -1,37 +1,28 @@
-#pragma once
+#pragma once  
+#include <memory>  
 
+template<typename T>  
+class Singleton  
+{  
+public:  
+   static T* GetInstance()  
+   {  
+       if (!instance)  
+       {  
+           instance.reset(new T());  
+       }  
+       return instance.get();  
+   }  
 
-template<typename T>
-class Singleton
-{
-public:
+   static void DestroyInstance()  
+   {  
+       instance.reset();  
+   }  
 
-	~Singleton()
-	{
-		DestroyInstance();
-	}
+protected:  
+   static std::unique_ptr<T> instance; // Pointer to the singleton instance  
+};  
 
-	static T* GetInstance()
-	{
-		if (instance == nullptr)
-		{
-			instance = new T();
-		}
-		return instance;
-	}
-
-	static void DestroyInstance()
-	{
-		if (instance != nullptr)
-		{
-			delete instance;
-			instance = nullptr;
-		}
-	}
-protected:
-	static T* instance; // Pointer to the singleton instance
-};
-
-// Definition of the static member
-template<typename T>
-T* Singleton<T>::instance = nullptr;
+// Definition of the static member  
+template<typename T>  
+std::unique_ptr<T> Singleton<T>::instance = nullptr;
