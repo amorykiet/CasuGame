@@ -63,6 +63,7 @@ void Node::Update(float deltaTime)
 	}
 
 	for (auto child : m_childs) {
+		if (child->m_isDestroyed) continue; // Skip destroyed nodes
 		child->Update(deltaTime);
 	}
 	_Update(deltaTime);
@@ -73,6 +74,7 @@ void Node::Update(float deltaTime)
 		for (Node* child : m_pendingRemoveNodes) {
 			m_childs.erase(std::remove(m_childs.begin(), m_childs.end(), child), m_childs.end());
 			child->Destroy();
+			delete child;
 		}
 		m_pendingRemoveNodes.clear();
 	}
@@ -82,6 +84,7 @@ void Node::Render()
 {
 	_Render();
 	for (auto child : m_childs) {
+		if (child->m_isDestroyed) continue; // Skip destroyed nodes
 		child->Render();
 	}
 }
@@ -169,15 +172,9 @@ void Node::AddChild(Node* child)
 void Node::RemoveChild(Node* child)
 {
 	if (child == nullptr) return;
-
-	// Remove the child from the list of children
-	auto it = std::find(m_childs.begin(), m_childs.end(), child);
-	if (it != m_childs.end()) {
-		m_childs.erase(it);
-	}
-
+	child->m_isDestroyed = true;
 	// Mark the child for deferred deletion
-	m_pendingRemoveNodes.push_back(child);
+	child->GetParent()->m_pendingRemoveNodes.push_back(child);
 }
 
 

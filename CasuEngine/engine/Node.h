@@ -39,6 +39,7 @@ public:
 	void Destroy();
 
 protected:
+	bool m_isDestroyed = false;
 	NodePath m_path;
 	std::string name;
 	std::vector<Node*> m_childs;
