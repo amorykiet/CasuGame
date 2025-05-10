@@ -5,6 +5,21 @@
 
 class Bullet : public Node {
 public:
+
+	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
+		element->SetAttribute("direction", direction);
+		element->SetAttribute("position_x", position.x);
+		element->SetAttribute("position_y", position.y);
+		Node::SerializeToXML(element, doc);
+	}
+
+	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
+		element->QueryIntAttribute("direction", &direction);
+		element->QueryFloatAttribute("position_x", &position.x);
+		element->QueryFloatAttribute("position_y", &position.y);
+		Node::DeserializeFromXML(element);
+	}
+
 	void SetPosition(RVector2 pos) {
 		position = pos;
 	}
@@ -24,13 +39,26 @@ private:
 	int direction = 1;
 };
 
+REGISTER_NODE_CLASS(Bullet);
 
 class Player : public Node {
 public:
+
+	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
+		element->SetAttribute("position_x", position.x);
+		element->SetAttribute("position_y", position.y);
+		Node::SerializeToXML(element, doc);
+	}
+
+	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
+		element->QueryFloatAttribute("position_x", &position.x);
+		element->QueryFloatAttribute("position_y", &position.y);
+		Node::DeserializeFromXML(element);
+	}
+
 	void SetPosition(RVector2 pos) {
 		position = pos;
 	}
-
 
     void _Update(float delta) override {  
 		
@@ -41,16 +69,6 @@ public:
 			bullet->SetPosition(position);
 
 			GetNode("Something")->AddChild(bullet);
-		}
-		
-		//Remove a bullet
-		if (RKeyboard::IsKeyPressed(KEY_S))
-		{
-			Bullet* bullet = dynamic_cast<Bullet*>(GetNode("Something/Bullet"));
-			if (bullet)
-			{
-				RemoveChild(bullet);
-			}
 		}
 
 
@@ -71,6 +89,14 @@ public:
 	   {
 		   position.y += 100.0f * delta;
 	   }
+
+
+	   //Test save scene
+	   if (RKeyboard::IsKeyPressed(KEY_S))
+	   {
+		   printf("Saving scene\n");
+		   SceneTree::GetInstance()->SaveCurrentSceneToXML("scene.config");
+	   }
     }
 
 	void _Render() override {
@@ -81,21 +107,32 @@ private:
 	RVector2 position;
 };
 
+REGISTER_NODE_CLASS(Player);
+
 int main() {
 
-	Scene* scene  = new Scene();
-	scene->SetName("MainScene");
+	if (SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE)) {
+		printf("Scene loaded successfully\n");
+	}
+	else
+	{
+		printf("Failed to load scene\n");
+		printf("Creating a new scene manually\n");
 
-	Player* player = new Player();
-	player->SetPosition(RVector2(100, 100));
+		Scene* scene = new Scene();
+		scene->SetName("MainScene");
 
-	Node* something = new Node();
-	something->SetName("Something");
+		Player* player = new Player();
+		player->SetPosition(RVector2(100, 100));
 
-	scene->AddChild(player);
-	player->AddChild(something);
+		Node* something = new Node();
+		something->SetName("Something");
 
-	SceneTree::GetInstance()->AddScene(scene);
+		scene->AddChild(player);
+		player->AddChild(something);
+
+		SceneTree::GetInstance()->AddScene(scene);
+	}
 
 	//Run the main loop
 	MainLoop::GetInstance()->Run();

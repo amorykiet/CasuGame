@@ -2,6 +2,7 @@
 #include "MainLoop.h"
 #include <sstream>
 #include <algorithm>
+#include <tinyxml2.h> //XML handling
 
 void Node::_Init()
 {
@@ -21,6 +22,41 @@ void Node::_Update(float)
 void Node::_Render()
 {
 	//callback for game logic
+}
+
+void Node::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
+{
+	element->SetAttribute("name", name.c_str());
+	element->SetAttribute("path", m_path.GetPath().c_str());
+
+	for (auto child : m_childs) {
+		tinyxml2::XMLElement* childElement = doc->NewElement(child->GetType().c_str());
+		child->SerializeToXML(childElement, doc);
+		element->InsertEndChild(childElement);
+	}
+}
+
+void Node::DeserializeFromXML(tinyxml2::XMLElement* element)
+{
+	const char* nameAttr = element->Attribute("name");
+	if (nameAttr) {
+		name = nameAttr;
+	}
+	const char* pathAttr = element->Attribute("path");
+	if (pathAttr) {
+		m_path.SetPath(pathAttr);
+	}
+
+	// Deserialize children (detect class from tag name)
+	for (tinyxml2::XMLElement* childElement = element->FirstChildElement();
+		childElement != nullptr;
+		childElement = childElement->NextSiblingElement()) {
+
+		const char* tagName = childElement->Name();
+		Node* childNode = NodeFactory::Create(tagName);
+		childNode->DeserializeFromXML(childElement);
+		AddChild(childNode);
+	}
 }
 
 void Node::Init()

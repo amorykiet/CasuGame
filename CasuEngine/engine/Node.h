@@ -3,6 +3,8 @@
 #include "NodePath.h"
 #include <vector>
 #include <string>
+#include "tinyxml2.h"
+#include "NodeFactory.h"
 
 class SceneTree;
 
@@ -15,6 +17,9 @@ public:
 	virtual void _Ready();
 	virtual void _Update(float);
 	virtual void _Render();
+
+	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc);
+	virtual void DeserializeFromXML(tinyxml2::XMLElement* element);
 
 	void Init();
 	void Ready();
@@ -50,3 +55,6 @@ protected:
 };
 
 using Scene = Node;
+
+REGISTER_NODE_CLASS(Scene);
+REGISTER_NODE_CLASS(Node);
