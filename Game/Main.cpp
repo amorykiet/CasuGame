@@ -1,7 +1,8 @@
 #include "Node.h"
 #include "MainLoop.h"
 #include "SceneTree.h"
-#include "core/raylib_cpp.h"
+#include "core/Color.h"
+#include "engine/manager/InputManager.h"
 
 class Bullet : public Node {
 public:
@@ -60,39 +61,45 @@ public:
 		position = pos;
 	}
 
-    void _Update(float delta) override {  
-		
+	void _Update(float delta) override {
+
 		//Fire a bullet
-		if (RKeyboard::IsKeyPressed(KEY_SPACE))
+		if (InputManager::IsMouseButtonPressed(MouseButton::MOUSE_BUTTON_LEFT))
 		{
 			Bullet* bullet = new Bullet();
-			bullet->SetPosition(position);
+			bullet->SetPosition(InputManager::GetMousePosition());
 
 			GetNode("Something")->AddChild(bullet);
 		}
 
+		if (InputManager::GetMouseWheelMove() > 0){
+			printf("Mouse wheel up\n");
+		}
+		else if (InputManager::GetMouseWheelMove() < 0) {
+			printf("Mouse wheel down\n");
+		}
 
 	   // Move the node
-       if (RKeyboard::IsKeyDown(KEY_LEFT))
+       if (InputManager::IsKeyDown(KEY_LEFT))
        {
            position.x -= 100.0f * delta;
        }
-	   else if (RKeyboard::IsKeyDown(KEY_RIGHT))
+	   else if (InputManager::IsKeyDown(KEY_RIGHT))
 	   {
 		   position.x += 100.0f * delta;
 	   }
-	   else if (RKeyboard::IsKeyDown(KEY_UP))
+	   else if (InputManager::IsKeyDown(KEY_UP))
 	   {
 		   position.y -= 100.0f * delta;
 	   }
-	   else if (RKeyboard::IsKeyDown(KEY_DOWN))
+	   else if (InputManager::IsKeyDown(KEY_DOWN))
 	   {
 		   position.y += 100.0f * delta;
 	   }
 
 
 	   //Test save scene
-	   if (RKeyboard::IsKeyPressed(KEY_S))
+	   if (InputManager::IsKeyPressed(KEY_S))
 	   {
 		   printf("Saving scene\n");
 		   SceneTree::GetInstance()->SaveCurrentSceneToXML("scene.config");

@@ -34,6 +34,9 @@
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{c2ab4b47-ca56-4625-a802-57d0900c08a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine\manager">
+      <UniqueIdentifier>{09117831-5501-49a9-9b94-6f212482f199}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\AudioDevice.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="engine\NodeFactory.h">
       <Filter>Source Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="engine\manager\InputManager.h">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="engine\Node.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\manager\InputManager.cpp">
+      <Filter>Source Files\engine\manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
