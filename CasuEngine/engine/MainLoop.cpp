@@ -1,9 +1,13 @@
 #include "MainLoop.h"
 #include "raylib.h"
+#include "manager/AudioManager.h"
 
 void MainLoop::Run()
 {
 	InitWindow(320, 180, "Game made by Casu Engine");
+
+	//Init audio device
+	AudioManager::GetInstance()->Init();
 
 	SetTargetFPS(60);
 
@@ -17,6 +21,8 @@ void MainLoop::Run()
 
 	while (!WindowShouldClose())
 	{
+		AudioManager::GetInstance()->Update();
+
 		Update(GetFrameTime());
 
 		BeginDrawing();
@@ -30,6 +36,8 @@ void MainLoop::Run()
 	isRunning = false;
 
 	Exit();
+
+	AudioManager::GetInstance()->Close();
 
 	CloseWindow();
 }

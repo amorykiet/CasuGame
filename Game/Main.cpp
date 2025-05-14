@@ -3,6 +3,8 @@
 #include "SceneTree.h"
 #include "core/Color.h"
 #include "engine/manager/InputManager.h"
+#include "engine/manager/AudioManager.h"
+#include "vld.h"
 
 class Bullet : public Node {
 public:
@@ -61,48 +63,27 @@ public:
 		position = pos;
 	}
 
+	void _Ready() override {
+		AudioManager::GetInstance()->PlayMusic("assets/music/country.mp3");
+	}
+
 	void _Update(float delta) override {
 
-		//Fire a bullet
-		if (InputManager::IsMouseButtonPressed(MouseButton::MOUSE_BUTTON_LEFT))
-		{
-			Bullet* bullet = new Bullet();
-			bullet->SetPosition(InputManager::GetMousePosition());
 
-			GetNode("Something")->AddChild(bullet);
-		}
-
-		if (InputManager::GetMouseWheelMove() > 0){
-			printf("Mouse wheel up\n");
-		}
-		else if (InputManager::GetMouseWheelMove() < 0) {
-			printf("Mouse wheel down\n");
-		}
-
-	   // Move the node
-       if (InputManager::IsKeyDown(KEY_LEFT))
-       {
-           position.x -= 100.0f * delta;
-       }
-	   else if (InputManager::IsKeyDown(KEY_RIGHT))
+	   if (InputManager::IsKeyPressed(KEY_P))
 	   {
-		   position.x += 100.0f * delta;
-	   }
-	   else if (InputManager::IsKeyDown(KEY_UP))
-	   {
-		   position.y -= 100.0f * delta;
-	   }
-	   else if (InputManager::IsKeyDown(KEY_DOWN))
-	   {
-		   position.y += 100.0f * delta;
+		   if (AudioManager::GetInstance()->IsPlayingMusic())
+		   {
+			   AudioManager::GetInstance()->PauseMusic();
+		   }
+		   else
+		   {
+			   AudioManager::GetInstance()->ResumeMusic();
+		   }
 	   }
 
-
-	   //Test save scene
-	   if (InputManager::IsKeyPressed(KEY_S))
-	   {
-		   printf("Saving scene\n");
-		   SceneTree::GetInstance()->SaveCurrentSceneToXML("scene.config");
+	   if (InputManager::IsKeyPressed(KEY_SPACE)) {
+		   AudioManager::GetInstance()->PlaySound("assets/sound/coin.wav");
 	   }
     }
 

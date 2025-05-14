@@ -24,16 +24,16 @@ public:
     void UnloadResource(const std::string& path);
 
 private:
-    std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
-    std::unordered_map<std::string, std::shared_ptr<Font>> m_fonts;
-    std::unordered_map<std::string, std::shared_ptr<Sound>> m_sounds;
-    std::unordered_map<std::string, std::shared_ptr<Music>> m_music;
+    std::unordered_map<std::string, std::shared_ptr<RTexture>> m_textures;
+    std::unordered_map<std::string, std::shared_ptr<RFont>> m_fonts;
+    std::unordered_map<std::string, std::shared_ptr<RSound>> m_sounds;
+    std::unordered_map<std::string, std::shared_ptr<RMusic>> m_music;
 };
 
 template<typename T>
 inline T* ResourceManager::GetResource(const std::string& path)
 {
-	if constexpr (std::is_same_v<T, TextureUnmanaged>)
+	if constexpr (std::is_same_v<T, RTexture>)
 	{
 		auto it = m_textures.find(path);
 		if (it != m_textures.end())
@@ -41,7 +41,7 @@ inline T* ResourceManager::GetResource(const std::string& path)
 			return it->second.get();
 		}
 	}
-	else if constexpr (std::is_same_v<T, Font>)
+	else if constexpr (std::is_same_v<T, RFont>)
 	{
 		auto it = m_fonts.find(path);
 		if (it != m_fonts.end())
@@ -49,7 +49,7 @@ inline T* ResourceManager::GetResource(const std::string& path)
 			return it->second.get();
 		}
 	}
-	else if constexpr (std::is_same_v<T, Sound>)
+	else if constexpr (std::is_same_v<T, RSound>)
 	{
 		auto it = m_sounds.find(path);
 		if (it != m_sounds.end())
@@ -57,7 +57,7 @@ inline T* ResourceManager::GetResource(const std::string& path)
 			return it->second.get();
 		}
 	}
-	else if constexpr (std::is_same_v<T, Music>)
+	else if constexpr (std::is_same_v<T, RMusic>)
 	{
 		auto it = m_music.find(path);
 		if (it != m_music.end())
@@ -65,16 +65,13 @@ inline T* ResourceManager::GetResource(const std::string& path)
 			return it->second.get();
 		}
 	}
-	else
-	{
-		return LoadResource<T>(path);
-	}
+	return LoadResource<T>(path);
 }
 
 template<typename T>
 inline T* ResourceManager::LoadResource(const std::string& path)
 {
-	if constexpr (std::is_same_v<T, TextureUnmanaged>)
+	if constexpr (std::is_same_v<T, RTexture>)
 	{
 		auto it = m_textures.find(path);
 		if (it != m_textures.end())
@@ -83,12 +80,12 @@ inline T* ResourceManager::LoadResource(const std::string& path)
 		}
 		else
 		{
-			auto texture = std::make_shared<TextureUnmanaged>(path);
+			auto texture = std::make_shared<RTexture>(path);
 			m_textures[path] = texture;
 			return texture.get();
 		}
 	}
-	else if constexpr (std::is_same_v<T, Font>)
+	else if constexpr (std::is_same_v<T, RFont>)
 	{
 		auto it = m_fonts.find(path);
 		if (it != m_fonts.end())
@@ -97,12 +94,12 @@ inline T* ResourceManager::LoadResource(const std::string& path)
 		}
 		else
 		{
-			auto font = std::make_shared<Font>(path);
+			auto font = std::make_shared<RFont>(path);
 			m_fonts[path] = font;
 			return font.get();
 		}
 	}
-	else if constexpr (std::is_same_v<T, Sound>)
+	else if constexpr (std::is_same_v<T, RSound>)
 	{
 		auto it = m_sounds.find(path);
 		if (it != m_sounds.end())
@@ -111,12 +108,12 @@ inline T* ResourceManager::LoadResource(const std::string& path)
 		}
 		else
 		{
-			auto sound = std::make_shared<Sound>(path);
+			auto sound = std::make_shared<RSound>(path);
 			m_sounds[path] = sound;
 			return sound.get();
 		}
 	}
-	else if constexpr (std::is_same_v<T, Music>)
+	else if constexpr (std::is_same_v<T, RMusic>)
 	{
 		auto it = m_music.find(path);
 		if (it != m_music.end())
@@ -125,7 +122,7 @@ inline T* ResourceManager::LoadResource(const std::string& path)
 		}
 		else
 		{
-			auto music = std::make_shared<Music>(path);
+			auto music = std::make_shared<RMusic>(path);
 			m_music[path] = music;
 			return music.get();
 		}
@@ -136,7 +133,7 @@ inline T* ResourceManager::LoadResource(const std::string& path)
 template<typename T>
 inline void ResourceManager::UnloadResource(const std::string& path)
 {
-	if constexpr (std::is_same_v<T, TextureUnmanaged>)
+	if constexpr (std::is_same_v<T, Texture>)
 	{
 		auto it = m_textures.find(path);
 		if (it != m_textures.end())

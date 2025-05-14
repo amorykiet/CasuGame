@@ -210,6 +210,12 @@
     <ClInclude Include="engine\manager\InputManager.h">
       <Filter>Source Files\engine\manager</Filter>
     </ClInclude>
+    <ClInclude Include="engine\manager\ResourceManager.h">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\manager\AudioManager.h">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp">
@@ -243,6 +249,12 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="engine\manager\InputManager.cpp">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\manager\ResourceManager.cpp">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\manager\AudioManager.cpp">
       <Filter>Source Files\engine\manager</Filter>
     </ClCompile>
   </ItemGroup>
