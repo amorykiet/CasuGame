@@ -17,6 +17,7 @@ public:
 	virtual void _Ready();
 	virtual void _Update(float);
 	virtual void _Render();
+	virtual void _Destroy();
 
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc);
 	virtual void DeserializeFromXML(tinyxml2::XMLElement* element);
@@ -40,6 +41,8 @@ public:
 
 	Node* GetNode(const NodePath& path);
 	Node* GetNode(const std::string& path);
+	bool HasChild(const NodePath& path);
+	bool HasChild(const std::string& name);
 
 	void Destroy();
 

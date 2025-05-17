@@ -219,6 +219,12 @@
     <ClInclude Include="engine\manager\RenderManager.h">
       <Filter>Source Files\engine\manager</Filter>
     </ClInclude>
+    <ClInclude Include="engine\manager\CollisionManager.h">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Collision.h">
+      <Filter>Source Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp">
@@ -262,6 +268,12 @@
     </ClCompile>
     <ClCompile Include="engine\manager\RenderManager.cpp">
       <Filter>Source Files\engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\manager\CollisionManager.cpp">
+      <Filter>Source Files\engine\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Collision.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "MainLoop.h"
 #include "manager/AudioManager.h"
 #include "manager/RenderManager.h"
+#include "manager/CollisionManager.h"
 
 void MainLoop::Run()
 {
@@ -23,6 +24,8 @@ void MainLoop::Run()
 
 		Update(GetFrameTime());
 
+		CollisionManager::GetInstance()->Update();
+
 		RenderManager::GetInstance()->BeginDrawing();
 		RenderManager::GetInstance()->ClearBackground(RAYWHITE);
 		
@@ -36,6 +39,8 @@ void MainLoop::Run()
 	isRunning = false;
 
 	Exit();
+	
+	CollisionManager::GetInstance()->Close();
 
 	AudioManager::GetInstance()->Close();
 

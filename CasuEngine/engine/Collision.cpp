@@ -1,0 +1,113 @@
+#include "Collision.h"
+#include <algorithm>
+#include <cstdio>
+
+void Collision::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
+{
+	element->SetAttribute("x", m_collisionRec.x);
+	element->SetAttribute("y", m_collisionRec.y);
+	element->SetAttribute("width", m_collisionRec.width);
+	element->SetAttribute("height", m_collisionRec.height);
+	element->SetAttribute("layer", m_layer);
+	element->SetAttribute("masks", m_masks.size());
+	for (size_t i = 0; i < m_masks.size(); ++i) {
+		element->SetAttribute(("mask" + std::to_string(i)).c_str(), m_masks[i]);
+	}
+	Node::SerializeToXML(element, doc);
+}
+
+void Collision::DeserializeFromXML(tinyxml2::XMLElement* element)
+{
+	element->QueryFloatAttribute("x", &m_collisionRec.x);
+	element->QueryFloatAttribute("y", &m_collisionRec.y);
+	element->QueryFloatAttribute("width", &m_collisionRec.width);
+	element->QueryFloatAttribute("height", &m_collisionRec.height);
+	element->QueryIntAttribute("layer", &m_layer);
+	int maskCount;
+	element->QueryIntAttribute("masks", &maskCount);
+	m_masks.clear();
+	for (int i = 0; i < maskCount; ++i) {
+		int mask;
+		element->QueryIntAttribute(("mask" + std::to_string(i)).c_str(), &mask);
+		m_masks.push_back(mask);
+	}
+	Node::DeserializeFromXML(element);
+}
+
+void Collision::_Destroy()
+{
+	m_masks.clear();
+}
+
+Collision::Collision() : m_collisionRec{ 0, 0, 0, 0 }, m_layer(0), m_masks{ 0 } {}
+
+Collision::Collision(const RRectangle& rec) : m_collisionRec(rec), m_layer(0), m_masks{ 0 } {}
+
+Collision::Collision(float x, float y, float width, float height)
+	: m_collisionRec{ x, y, width, height }, m_layer(0), m_masks{ 0 } {
+}
+
+bool Collision::CheckCollision(const RRectangle& other) {
+	return ::CheckCollisionRecs(m_collisionRec, other);
+}
+
+bool Collision::CheckCollision(const Collision& other) {
+	if (CheckMask(other.m_layer)) {
+		return CheckCollision(other.m_collisionRec);
+	}
+	return false;
+}
+
+bool Collision::CheckMask(int layer) {
+	return std::find(m_masks.begin(), m_masks.end(), layer) != m_masks.end();
+}
+
+RRectangle Collision::GetCollisionRec() {
+	return m_collisionRec;
+}
+
+RRectangle Collision::GetCollisionRec(const Collision& other) {
+	return ::GetCollisionRec(m_collisionRec, other.m_collisionRec);
+}
+
+void Collision::AddMask(int id) {
+	m_masks.push_back(id);
+}
+
+void Collision::RemoveMask(int id) {
+	m_masks.erase(std::remove(m_masks.begin(), m_masks.end(), id), m_masks.end());
+}
+
+void Collision::SetLayer(int id) {
+	m_layer = id;
+}
+
+int Collision::GetLayer() const {
+	return m_layer;
+}
+
+RVector2 Collision::GetSize() const {
+	return { m_collisionRec.width, m_collisionRec.height };
+}
+
+RVector2 Collision::GetPosition() const {
+	return { m_collisionRec.x, m_collisionRec.y };
+}
+
+void Collision::SetPosition(RVector2 pos) {
+	m_collisionRec.x = pos.x;
+	m_collisionRec.y = pos.y;
+}
+
+void Collision::SetSize(RVector2 size) {
+	m_collisionRec.width = size.x;
+	m_collisionRec.height = size.y;
+}
+
+void Collision::OnCollisionEnter(Collision& other) {
+	printf("Collision Enter\n");
+}
+
+void Collision::OnCollisionRelease(Collision& other) {
+	printf("Collision Release\n");
+}

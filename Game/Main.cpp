@@ -5,7 +5,8 @@
 #include "engine/manager/InputManager.h"
 #include "engine/manager/AudioManager.h"
 #include "engine/manager/RenderManager.h"
-//#include "vld.h"
+#include "engine/manager/CollisionManager.h"
+#include "vld.h"
 
 
 class World : public Node {
@@ -25,55 +26,148 @@ public:
 		}
 	}
 
-	virtual void _Render() override {
-		// Test rendering
-		RenderManager::GetInstance()->DrawText("Hello World", 200, 10, 20, PURPLE);
-		RenderManager::GetInstance()->DrawRectangle(10, 50, 100, 50, RED);
-		RenderManager::GetInstance()->DrawCircle(100, 100, 50, BLUE);
-		RenderManager::GetInstance()->DrawLine(0, 0, 200, 200, GREEN);
-		RenderManager::GetInstance()->DrawLine(200, 0, 0, 200, GREEN);
-		RenderManager::GetInstance()->DrawRectangleLines(10, 50, 100, 50, BLACK);
-		RenderManager::GetInstance()->DrawCircleLines(100, 100, 50, BLACK);
-		RenderManager::GetInstance()->DrawTexture("assets/texture/Silksong.jpg", 200, 200, 0.0f, 0.2f, WHITE);
-		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE))
-		{
-			if (isDefaultShader)
-			{
-				RenderManager::GetInstance()->SetShader("assets/shader/bloom.fs");
-				isDefaultShader = false;
-			}
-			else
-			{
-				RenderManager::GetInstance()->SetDefaultShader();
-				isDefaultShader = true;
-			}
-		}
-	}
 private:
 	bool isDefaultShader = true;
 };
 REGISTER_NODE_CLASS(World);
 
-int main() {
 
-	if (SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE)) {
-		printf("Scene loaded successfully\n");
+/// A simple player class that inherits from Node
+class Player : public Node {
+public:
+	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
+		element->SetAttribute("x", position.x);
+		element->SetAttribute("y", position.y);
+		Node::SerializeToXML(element, doc);
 	}
-	else
+	
+	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
+		element->QueryFloatAttribute("x", &position.x);
+		element->QueryFloatAttribute("y", &position.y);
+		Node::DeserializeFromXML(element);
+	}
+
+	virtual void _Ready() override {
+		if (HasChild("Collision"))
+		{
+			collision = dynamic_cast<Collision*>(GetNode("Collision"));
+			CollisionManager::GetInstance()->AddCollision(collision);
+		}
+	}
+
+	virtual void _Update(float dt) override {
+		//move
+		if (InputManager::GetInstance()->IsKeyDown(KEY_W)) {
+			position.y -= 100 * dt;
+		}
+		else if (InputManager::GetInstance()->IsKeyDown(KEY_S)) {
+			position.y += 100 * dt;
+		}
+		if (InputManager::GetInstance()->IsKeyDown(KEY_A)) {
+			position.x -= 100 * dt;
+		}
+		else if (InputManager::GetInstance()->IsKeyDown(KEY_D)) {
+			position.x += 100 * dt;
+		}
+
+		//update collision position
+		if (collision)
+		{
+			collision->SetPosition(position);
+		}
+	}
+	
+	virtual void _Render() override {
+		RenderManager::GetInstance()->DrawCircleV(position, 20, BLUE);
+		if (collision)
+		{
+			RenderManager::GetInstance()->DrawRectangleLinesV(collision->GetPosition(), collision->GetSize(), RED);
+		}
+	}
+
+	void AddCollision(Collision* col) {
+		collision = col;
+		AddChild(col);
+	}
+
+	virtual void _Destroy() override {
+		CollisionManager::GetInstance()->RemoveCollision(collision);
+	}
+
+private:
+	RVector2 position;
+	Collision* collision;
+};
+REGISTER_NODE_CLASS(Player);
+
+/// A simple box class that inherits from Node
+class Box : public Node {
+
+public:
+	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
+		Node::SerializeToXML(element, doc);
+	}
+	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
+		Node::DeserializeFromXML(element);
+	}
+
+	virtual void _Ready() override {
+		if (HasChild("Collision"))
+		{
+			collision = dynamic_cast<Collision*>(GetNode("Collision"));
+			CollisionManager::GetInstance()->AddCollision(collision);
+		}
+	}
+
+	virtual void _Update(float dt) override {
+	}
+
+	virtual void _Render() override {
+		if (collision)
+		{
+			RenderManager::GetInstance()->DrawRectangleLinesV(collision->GetPosition(), collision->GetSize(), YELLOW);
+		}
+	}
+
+	void AddCollision(Collision* col) {
+		collision = col;
+		AddChild(col);
+	}
+
+	virtual void _Destroy() override {
+		CollisionManager::GetInstance()->RemoveCollision(collision);
+	}
+private:
+	Collision* collision;
+};
+REGISTER_NODE_CLASS(Box);
+
+int main() {
+	if (SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE))
 	{
-		printf("Failed to load scene\n");
-		printf("Creating a new scene manually\n");
+		MainLoop::GetInstance()->Run();
+	}
+	else {
 
 		Scene* scene = new Scene();
 		scene->SetName("MainScene");
 
 		World* world = new World();
+		Player* player = new Player();
+		Box* box = new Box();
 
+		Collision* playerCollision = new Collision(0, 0, 40, 40);
+		Collision* boxCollision = new Collision(200, 200, 40, 40);
+
+		player->AddChild(playerCollision);
+		box->AddChild(boxCollision);
+		world->AddChild(player);
+		world->AddChild(box);
 		scene->AddChild(world);
 
 		SceneTree::GetInstance()->AddScene(scene);
+		//Run the main loop
+		MainLoop::GetInstance()->Run();
 	}
 
-	//Run the main loop
-	MainLoop::GetInstance()->Run();
 }

@@ -2,51 +2,36 @@
 #include <vector>
 #include <string>
 
-class EventInfo
-{
+template <typename T>
+class Observer {
 public:
-	EventInfo(std::string name = "NONE") : m_name(name) {}
-	std::string GetName() const { return m_name; }
-
-private:
-	std::string m_name;
+	virtual void OnNotify(const T& subject) = 0;
+	virtual ~Observer() = default;
 };
 
-
-
-class Observer
-{
-public:
-	virtual ~Observer() {}
-	virtual void OnNotify(const Subject& entity) = 0;
-
-private:
-
-};
-
-
+template <typename T>
 class Subject
 {
 public:  
-	void addObserver(Observer* observer)
+	void AddObserver(Observer<T>* observer)
 	{
 		m_observers.push_back(observer);
 	}
 
-	void removeObserver(Observer* observer)
+	void RemoveObserver(Observer<T>* observer)
 	{
 		m_observers.erase(std::remove(m_observers.begin(), m_observers.end(), observer), m_observers.end());
 	}
 
 protected:
-    void Notify(const Observer& entity, EventInfo event)
+    void Notify(T& data)
     {
-		for (auto observer : m_observers)
+		for (auto* observer : m_observers)
 		{
-			observer->OnNotify(*this);
+			observer->OnNotify(data);
 		}
     }
 
 private:
-    std::vector<Observer*> m_observers;
+    std::vector<Observer<T>*> m_observers;
 };

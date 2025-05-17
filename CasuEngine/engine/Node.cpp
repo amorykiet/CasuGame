@@ -24,6 +24,10 @@ void Node::_Render()
 	//callback for game logic
 }
 
+void Node::_Destroy()
+{
+}
+
 void Node::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
 {
 	element->SetAttribute("name", name.c_str());
@@ -252,8 +256,21 @@ Node* Node::GetNode(const std::string& path)
 	return GetNode(nodePath);
 }
 
+bool Node::HasChild(const NodePath& path)
+{
+	Node* node = GetNode(path);
+	return node != nullptr;
+}
+
+bool Node::HasChild(const std::string& name)
+{
+	NodePath nodePath(name);
+	return HasChild(nodePath);
+}
+
 void Node::Destroy()
 {
+	_Destroy();
 	printf("Destroy %s\n", m_path.GetPath().c_str());
 	for (auto child : m_childs) {
 		child->Destroy();
