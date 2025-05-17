@@ -30,4 +30,8 @@ void ResourceManager::UnloadResources()
 		pair.second.reset();
 	}
 	m_music.clear();
+	for (auto& pair : m_shaders)
+	{
+		pair.second.reset();
+	}
 }

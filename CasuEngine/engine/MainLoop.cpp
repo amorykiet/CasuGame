@@ -25,8 +25,10 @@ void MainLoop::Run()
 
 		RenderManager::GetInstance()->BeginDrawing();
 		RenderManager::GetInstance()->ClearBackground(RAYWHITE);
-
+		
+		RenderManager::GetInstance()->BeginShaderMode();
 		Render();
+		RenderManager::GetInstance()->EndShaderMode();
 
 		RenderManager::GetInstance()->EndDrawing();
 	}

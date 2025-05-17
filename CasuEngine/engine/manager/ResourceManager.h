@@ -4,6 +4,7 @@
 #include "../core/Font.h"
 #include "../core/Sound.h"
 #include "../core/Music.h"
+#include "../core/Shader.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -28,6 +29,7 @@ private:
     std::unordered_map<std::string, std::shared_ptr<RFont>> m_fonts;
     std::unordered_map<std::string, std::shared_ptr<RSound>> m_sounds;
     std::unordered_map<std::string, std::shared_ptr<RMusic>> m_music;
+	std::unordered_map<std::string, std::shared_ptr<RShader>> m_shaders;
 };
 
 template<typename T>
@@ -61,6 +63,14 @@ inline T* ResourceManager::GetResource(const std::string& path)
 	{
 		auto it = m_music.find(path);
 		if (it != m_music.end())
+		{
+			return it->second.get();
+		}
+	}
+	else if constexpr (std::is_same_v<T, RShader>)
+	{
+		auto it = m_shaders.find(path);
+		if (it != m_shaders.end())
 		{
 			return it->second.get();
 		}
@@ -127,13 +137,27 @@ inline T* ResourceManager::LoadResource(const std::string& path)
 			return music.get();
 		}
 	}
+	else if constexpr (std::is_same_v<T, RShader>)
+	{
+		auto it = m_shaders.find(path);
+		if (it != m_shaders.end())
+		{
+			return it->second.get();
+		}
+		else
+		{
+			auto shader = std::make_shared<RShader>(nullptr, path.c_str());
+			m_shaders[path] = shader;
+			return shader.get();
+		}
+	}
 	return nullptr;
 }
 
 template<typename T>
 inline void ResourceManager::UnloadResource(const std::string& path)
 {
-	if constexpr (std::is_same_v<T, Texture>)
+	if constexpr (std::is_same_v<T, RTexture>)
 	{
 		auto it = m_textures.find(path);
 		if (it != m_textures.end())
@@ -141,7 +165,7 @@ inline void ResourceManager::UnloadResource(const std::string& path)
 			m_textures.erase(it);
 		}
 	}
-	else if constexpr (std::is_same_v<T, Font>)
+	else if constexpr (std::is_same_v<T, RFont>)
 	{
 		auto it = m_fonts.find(path);
 		if (it != m_fonts.end())
@@ -149,7 +173,7 @@ inline void ResourceManager::UnloadResource(const std::string& path)
 			m_fonts.erase(it);
 		}
 	}
-	else if constexpr (std::is_same_v<T, Sound>)
+	else if constexpr (std::is_same_v<T, RSound>)
 	{
 		auto it = m_sounds.find(path);
 		if (it != m_sounds.end())
@@ -157,12 +181,20 @@ inline void ResourceManager::UnloadResource(const std::string& path)
 			m_sounds.erase(it);
 		}
 	}
-	else if constexpr (std::is_same_v<T, Music>)
+	else if constexpr (std::is_same_v<T, RMusic>)
 	{
 		auto it = m_music.find(path);
 		if (it != m_music.end())
 		{
 			m_music.erase(it);
+		}
+	}
+	else if constexpr (std::is_same_v<T, RShader>)
+	{
+		auto it = m_shaders.find(path);
+		if (it != m_shaders.end())
+		{
+			m_shaders.erase(it);
 		}
 	}
 }

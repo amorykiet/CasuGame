@@ -61,6 +61,48 @@ void RenderManager::EndDrawing()
 	m_window->EndDrawing();
 }
 
+void RenderManager::SetShader(std::string file)
+{
+	RShader* shader = ResourceManager::GetInstance()->GetResource<RShader>(file);
+	if (shader)
+	{
+		m_currentShader = shader;
+	}
+	else
+	{
+		throw RRaylibException("Shader not initialized");
+	}
+}
+
+void RenderManager::SetDefaultShader()
+{
+	if (m_currentShader)
+	{
+		m_currentShader = nullptr;
+	}
+}
+
+void RenderManager::BeginShaderMode()
+{
+	if (m_currentShader)
+	{
+		m_currentShader->BeginMode();
+	}
+	else
+	{
+		// If no shader is set, use the default shader
+		::EndShaderMode();
+	}
+}
+
+void RenderManager::EndShaderMode()
+{
+	if (m_currentShader)
+	{
+		m_currentShader->EndMode();
+	}
+}
+
 void RenderManager::DrawCircleV(RVector2 center, float radius, const RColor& color)
 {
 	::DrawCircleV(center, radius, color);

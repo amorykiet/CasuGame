@@ -35,7 +35,22 @@ public:
 		RenderManager::GetInstance()->DrawRectangleLines(10, 50, 100, 50, BLACK);
 		RenderManager::GetInstance()->DrawCircleLines(100, 100, 50, BLACK);
 		RenderManager::GetInstance()->DrawTexture("assets/texture/Silksong.jpg", 200, 200, 0.0f, 0.2f, WHITE);
+		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE))
+		{
+			if (isDefaultShader)
+			{
+				RenderManager::GetInstance()->SetShader("assets/shader/bloom.fs");
+				isDefaultShader = false;
+			}
+			else
+			{
+				RenderManager::GetInstance()->SetDefaultShader();
+				isDefaultShader = true;
+			}
+		}
 	}
+private:
+	bool isDefaultShader = true;
 };
 REGISTER_NODE_CLASS(World);
 

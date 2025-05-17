@@ -18,7 +18,12 @@ public:
 	void ClearBackground();
 	void BeginDrawing();
 	void EndDrawing();
-	
+	void SetShader(std::string file);
+	void SetDefaultShader();
+	void BeginShaderMode();
+	void EndShaderMode();
+
+
 	// Drawing Circles
 	void DrawCircleV(RVector2 center, float radius, const RColor& color);
 	void DrawCircle(float centerX, float centerY, float radius, const RColor& color);
@@ -54,4 +59,5 @@ public:
 
 private:
 	RWindow* m_window;
+	RShader* m_currentShader;
 };

@@ -18,11 +18,11 @@ namespace raylib {
 
         ShaderUnmanaged(const ::Shader& shader) : ::Shader(shader) {}
 
-        ShaderUnmanaged(unsigned int id, int* locs = nullptr) : ::Shader{ id, locs } {}
+        //ShaderUnmanaged(unsigned int id, int* locs = nullptr) : ::Shader{ id, locs } {}
 
-        ShaderUnmanaged(const std::string& vsFileName, const std::string& fsFileName) {
-            set(::LoadShader(vsFileName.c_str(), fsFileName.c_str()));
-        }
+        //ShaderUnmanaged(const std::string& vsFileName, const std::string& fsFileName) {
+        //    set(::LoadShader(vsFileName.c_str(), fsFileName.c_str()));
+        //}
         ShaderUnmanaged(const char* vsFileName, const char* fsFileName) { set(::LoadShader(vsFileName, fsFileName)); }
 
         /**
