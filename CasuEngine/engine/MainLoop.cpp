@@ -1,15 +1,13 @@
 #include "MainLoop.h"
-#include "raylib.h"
 #include "manager/AudioManager.h"
+#include "manager/RenderManager.h"
 
 void MainLoop::Run()
 {
-	InitWindow(320, 180, "Game made by Casu Engine");
+	RenderManager::GetInstance()->Init("Casu Engine", 800, 500);
 
 	//Init audio device
 	AudioManager::GetInstance()->Init();
-
-	SetTargetFPS(60);
 
 	//Init nodes from top to bottom, parrent to child
 	SceneTree::GetInstance()->Init();
@@ -25,12 +23,12 @@ void MainLoop::Run()
 
 		Update(GetFrameTime());
 
-		BeginDrawing();
+		RenderManager::GetInstance()->BeginDrawing();
+		RenderManager::GetInstance()->ClearBackground(RAYWHITE);
 
-		ClearBackground(RAYWHITE);
 		Render();
 
-		EndDrawing();
+		RenderManager::GetInstance()->EndDrawing();
 	}
 
 	isRunning = false;
@@ -39,7 +37,7 @@ void MainLoop::Run()
 
 	AudioManager::GetInstance()->Close();
 
-	CloseWindow();
+	RenderManager::GetInstance()->Close();
 }
 
 void MainLoop::Update(float deltaTime)

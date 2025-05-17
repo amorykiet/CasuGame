@@ -4,98 +4,40 @@
 #include "core/Color.h"
 #include "engine/manager/InputManager.h"
 #include "engine/manager/AudioManager.h"
-#include "vld.h"
+#include "engine/manager/RenderManager.h"
+//#include "vld.h"
 
-class Bullet : public Node {
+
+class World : public Node {
 public:
-
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
-		element->SetAttribute("direction", direction);
-		element->SetAttribute("position_x", position.x);
-		element->SetAttribute("position_y", position.y);
 		Node::SerializeToXML(element, doc);
 	}
 
 	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
-		element->QueryIntAttribute("direction", &direction);
-		element->QueryFloatAttribute("position_x", &position.x);
-		element->QueryFloatAttribute("position_y", &position.y);
 		Node::DeserializeFromXML(element);
 	}
 
-	void SetPosition(RVector2 pos) {
-		position = pos;
-	}
-	void _Update(float delta) override {
-		position.x += 10.0f * direction * delta;
-	}
-	void _Render() override {
-		DrawCircleV(position, 5.0f, RColor::Blue());
+	virtual void _Update(float dt) override {
+		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE))
+		{
+			SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+		}
 	}
 
-	void ChangeDirection() {
-		direction *= -1;
+	virtual void _Render() override {
+		// Test rendering
+		RenderManager::GetInstance()->DrawText("Hello World", 200, 10, 20, PURPLE);
+		RenderManager::GetInstance()->DrawRectangle(10, 50, 100, 50, RED);
+		RenderManager::GetInstance()->DrawCircle(100, 100, 50, BLUE);
+		RenderManager::GetInstance()->DrawLine(0, 0, 200, 200, GREEN);
+		RenderManager::GetInstance()->DrawLine(200, 0, 0, 200, GREEN);
+		RenderManager::GetInstance()->DrawRectangleLines(10, 50, 100, 50, BLACK);
+		RenderManager::GetInstance()->DrawCircleLines(100, 100, 50, BLACK);
+		RenderManager::GetInstance()->DrawTexture("assets/texture/Silksong.jpg", 200, 200, 0.0f, 0.2f, WHITE);
 	}
-
-private:
-	RVector2 position;
-	int direction = 1;
 };
-
-REGISTER_NODE_CLASS(Bullet);
-
-class Player : public Node {
-public:
-
-	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
-		element->SetAttribute("position_x", position.x);
-		element->SetAttribute("position_y", position.y);
-		Node::SerializeToXML(element, doc);
-	}
-
-	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
-		element->QueryFloatAttribute("position_x", &position.x);
-		element->QueryFloatAttribute("position_y", &position.y);
-		Node::DeserializeFromXML(element);
-	}
-
-	void SetPosition(RVector2 pos) {
-		position = pos;
-	}
-
-	void _Ready() override {
-		AudioManager::GetInstance()->PlayMusic("assets/music/country.mp3");
-	}
-
-	void _Update(float delta) override {
-
-
-	   if (InputManager::IsKeyPressed(KEY_P))
-	   {
-		   if (AudioManager::GetInstance()->IsPlayingMusic())
-		   {
-			   AudioManager::GetInstance()->PauseMusic();
-		   }
-		   else
-		   {
-			   AudioManager::GetInstance()->ResumeMusic();
-		   }
-	   }
-
-	   if (InputManager::IsKeyPressed(KEY_SPACE)) {
-		   AudioManager::GetInstance()->PlaySound("assets/sound/coin.wav");
-	   }
-    }
-
-	void _Render() override {
-		DrawCircleV(position, 10.0f, RColor::Red());
-	}
-
-private:
-	RVector2 position;
-};
-
-REGISTER_NODE_CLASS(Player);
+REGISTER_NODE_CLASS(World);
 
 int main() {
 
@@ -110,14 +52,9 @@ int main() {
 		Scene* scene = new Scene();
 		scene->SetName("MainScene");
 
-		Player* player = new Player();
-		player->SetPosition(RVector2(100, 100));
+		World* world = new World();
 
-		Node* something = new Node();
-		something->SetName("Something");
-
-		scene->AddChild(player);
-		player->AddChild(something);
+		scene->AddChild(world);
 
 		SceneTree::GetInstance()->AddScene(scene);
 	}
