@@ -9,6 +9,7 @@ class SceneTree : public Singleton<SceneTree>
 public:
 
 	void AddScene(Scene* scene);
+	Scene* GetCurrentScene() { return currentScene; }
 	void Init();
 	void Ready();
 	void Update(float deltaTime);

@@ -2,10 +2,13 @@
 #include "manager/AudioManager.h"
 #include "manager/RenderManager.h"
 #include "manager/CollisionManager.h"
+#include "tinyxml2.h"
 
 void MainLoop::Run()
 {
-	RenderManager::GetInstance()->Init("Casu Engine", 800, 500);
+	LoadConfig();
+
+	RenderManager::GetInstance()->Init(title.c_str(), width, height);
 
 	//Init audio device
 	AudioManager::GetInstance()->Init();
@@ -45,6 +48,8 @@ void MainLoop::Run()
 	AudioManager::GetInstance()->Close();
 
 	RenderManager::GetInstance()->Close();
+
+	SaveConfig();
 }
 
 void MainLoop::Update(float deltaTime)
@@ -60,4 +65,34 @@ void MainLoop::Render()
 void MainLoop::Exit()
 {
 	SceneTree::GetInstance()->Destroy();
+}
+
+void MainLoop::LoadConfig()
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(GAME_CONFIG_FILE) == tinyxml2::XML_SUCCESS)
+	{
+		tinyxml2::XMLElement* root = doc.RootElement();
+		if (root)
+		{
+			const char* titleAttr = root->Attribute("title");
+			if (titleAttr)
+			{
+				title = titleAttr;
+			}
+			root->QueryIntAttribute("width", &width);
+			root->QueryIntAttribute("height", &height);
+		}
+	}
+}
+
+void MainLoop::SaveConfig()
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement* root = doc.NewElement("GameConfig");
+	doc.InsertFirstChild(root);
+	root->SetAttribute("title", title.c_str());
+	root->SetAttribute("width", width);
+	root->SetAttribute("height", height);
+	doc.SaveFile(GAME_CONFIG_FILE);
 }
