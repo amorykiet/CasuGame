@@ -46,6 +46,7 @@ public:
 	bool HasChild(const std::string& name);
 
 	void Destroy();
+	bool isDestroyed() const { return m_isDestroyed; }
 
 protected:
 	bool m_isDestroyed = false;

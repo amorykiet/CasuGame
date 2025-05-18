@@ -9,6 +9,8 @@
 
 class Collision: public Node {
 public:
+	using CollisionCallback = std::function<void(Collision&)>;// signal for collision events
+
 	virtual ~Collision() = default;
 
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
@@ -39,10 +41,15 @@ public:
 	void OnCollisionEnter(Collision& other);
 	void OnCollisionRelease(Collision& other);
 
+	void AddOnCollisionEnterCallback(CollisionCallback callback);
+	void AddOnCollisionReleaseCallback(CollisionCallback callback);
+
 private:
 	RRectangle					m_collisionRec;
 	int							m_layer;					// Layer that other check collision to
 	std::vector<int>			m_masks;					// Mask of other that this can collide with
+	std::vector<CollisionCallback>	m_onCollisionEnterCallbacks;	// Callbacks for collision enter
+	std::vector<CollisionCallback>	m_onCollisionReleaseCallbacks;	// Callbacks for collision release
 };
 
 REGISTER_NODE_CLASS(Collision);

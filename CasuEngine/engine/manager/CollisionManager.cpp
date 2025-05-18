@@ -3,12 +3,20 @@
 
 void CollisionManager::Update()
 {	
+	// Remove destroyed collisions at the start of Update
+	m_collisions.erase(
+		std::remove_if(m_collisions.begin(), m_collisions.end(),
+			[](Collision* c) { return c->isDestroyed(); }),
+		m_collisions.end());
+	
 	std::set<std::pair<Collision*, Collision*>> currentCollisions;
 	// Check for collisions
 	for (Collision* current : m_collisions)
 	{
+		if (current->isDestroyed()) continue; // Skip destroyed
 		for (Collision* target: m_collisions)
 		{
+			if (target->isDestroyed()) continue; // Skip destroyed
 			if (current == target) continue;
 			if (current->CheckCollision(*target))
 			{
@@ -27,6 +35,7 @@ void CollisionManager::Update()
 	// Collision Release
 	for (const auto& pair : m_lastCollisions)
 	{
+		if (pair.first->isDestroyed() || pair.second->isDestroyed()) continue; // Skip destroyed
 		if (currentCollisions.find(pair) == currentCollisions.end())
 		{
 			if (pair.first->CheckMask(pair.second->GetLayer()))

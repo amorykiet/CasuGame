@@ -9,29 +9,6 @@
 #include "vld.h"
 
 
-class World : public Node {
-public:
-	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
-		Node::SerializeToXML(element, doc);
-	}
-
-	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
-		Node::DeserializeFromXML(element);
-	}
-
-	virtual void _Update(float dt) override {
-		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE))
-		{
-			SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
-		}
-	}
-
-private:
-	bool isDefaultShader = true;
-};
-REGISTER_NODE_CLASS(World);
-
-
 /// A simple player class that inherits from Node
 class Player : public Node {
 public:
@@ -40,7 +17,7 @@ public:
 		element->SetAttribute("y", position.y);
 		Node::SerializeToXML(element, doc);
 	}
-	
+
 	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
 		element->QueryFloatAttribute("x", &position.x);
 		element->QueryFloatAttribute("y", &position.y);
@@ -73,21 +50,16 @@ public:
 		//update collision position
 		if (collision)
 		{
-			collision->SetPosition(position);
+			collision->SetPosition(position - collision->GetSize() / 2.0f);
 		}
 	}
-	
+
 	virtual void _Render() override {
 		RenderManager::GetInstance()->DrawCircleV(position, 20, BLUE);
 		if (collision)
 		{
 			RenderManager::GetInstance()->DrawRectangleLinesV(collision->GetPosition(), collision->GetSize(), RED);
 		}
-	}
-
-	void AddCollision(Collision* col) {
-		collision = col;
-		AddChild(col);
 	}
 
 	virtual void _Destroy() override {
@@ -101,7 +73,7 @@ private:
 REGISTER_NODE_CLASS(Player);
 
 /// A simple box class that inherits from Node
-class Box : public Node {
+class Box : public Node, public std::enable_shared_from_this<Box> {
 
 public:
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
@@ -117,6 +89,9 @@ public:
 			collision = dynamic_cast<Collision*>(GetNode("Collision"));
 			CollisionManager::GetInstance()->AddCollision(collision);
 		}
+
+		// Set up collision detection
+		collision->AddOnCollisionEnterCallback(std::bind(&Box::OnCollisionEnter, this, std::placeholders::_1));
 	}
 
 	virtual void _Update(float dt) override {
@@ -129,18 +104,51 @@ public:
 		}
 	}
 
-	void AddCollision(Collision* col) {
-		collision = col;
-		AddChild(col);
-	}
-
 	virtual void _Destroy() override {
 		CollisionManager::GetInstance()->RemoveCollision(collision);
 	}
+
+	void OnCollisionEnter(Collision& other) {
+		if (other.GetParent()->GetName() == "Player") {
+			printf("Box collided with Player\n");
+			// destroy this box
+			CollisionManager::GetInstance()->RemoveCollision(collision);
+			GetParent()->RemoveChild(this);// must have better way:)
+		}
+	}
+
 private:
 	Collision* collision;
 };
 REGISTER_NODE_CLASS(Box);
+
+class World : public Node {
+public:
+	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
+		Node::SerializeToXML(element, doc);
+	}
+
+	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override {
+		Node::DeserializeFromXML(element);
+	}
+
+	virtual void _Update(float dt) override {
+		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE))
+		{
+			SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+		}
+
+		if (InputManager::GetInstance()->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		{
+			RVector2 mousePos = InputManager::GetInstance()->GetMousePosition();
+			Box* box = new Box();
+			Collision* collision = new Collision(mousePos.x, mousePos.y, 40, 40);
+			box->AddChild(collision);
+			AddChild(box);
+		}
+	}
+};
+REGISTER_NODE_CLASS(World);
 
 int main() {
 	if (SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE))

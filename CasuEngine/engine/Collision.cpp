@@ -105,9 +105,23 @@ void Collision::SetSize(RVector2 size) {
 }
 
 void Collision::OnCollisionEnter(Collision& other) {
-	printf("Collision Enter\n");
+	for (auto& callback : m_onCollisionEnterCallbacks) {
+		callback(other);
+	}
 }
 
 void Collision::OnCollisionRelease(Collision& other) {
-	printf("Collision Release\n");
+	for (auto& callback : m_onCollisionReleaseCallbacks) {
+		callback(other);
+	}
+}
+
+void Collision::AddOnCollisionEnterCallback(CollisionCallback callback)
+{
+	m_onCollisionEnterCallbacks.push_back(callback);
+}
+
+void Collision::AddOnCollisionReleaseCallback(CollisionCallback callback)
+{
+	m_onCollisionReleaseCallbacks.push_back(callback);
 }
