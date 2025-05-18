@@ -11,6 +11,7 @@ class SceneTree;
 class Node
 {
 public:
+	virtual ~Node() = default;
 
 	//Callbacks for game logic
 	virtual void _Init();

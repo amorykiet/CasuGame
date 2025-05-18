@@ -9,6 +9,7 @@
 
 class Collision: public Node {
 public:
+	virtual ~Collision() = default;
 
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
 	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override;
