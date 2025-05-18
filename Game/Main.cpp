@@ -73,7 +73,7 @@ private:
 REGISTER_NODE_CLASS(Player);
 
 /// A simple box class that inherits from Node
-class Box : public Node, public std::enable_shared_from_this<Box> {
+class Box : public Node {
 
 public:
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override {
