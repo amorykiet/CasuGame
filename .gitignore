@@ -2,3 +2,4 @@
 **/generated/
 .vs/
 **.config
+imgui.ini
