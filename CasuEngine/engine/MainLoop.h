@@ -18,6 +18,8 @@ public:
 	void SetWidth(int width) { this->width = width; }
 	void SetHeight(int height) { this->height = height; }
 
+	void LoadConfig();
+	void SaveConfig();
 private:
 	bool isRunning = false;
 	std::string title;
@@ -27,7 +29,5 @@ private:
 	void Update(float deltaTime);
 	void Render();
 	void Exit();
-	void LoadConfig();
-	void SaveConfig();
 
 };

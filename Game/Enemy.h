@@ -29,6 +29,7 @@ public:
 private:
     Collision* collision;
 	RVector2 position;
+    int size = 0;
     RVector2 direction;
 	float speed = 100.0f; // Speed of the enemy
 	PlayerHit playerHitCallback; // Callback for player hit

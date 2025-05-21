@@ -44,7 +44,7 @@ public:
 	Node* GetNode(const std::string& path);
 	bool HasChild(const NodePath& path);
 	bool HasChild(const std::string& name);
-
+    const std::vector<Node*>& GetChilds() const { return m_childs; }
 	void Destroy();
 	bool isDestroyed() const { return m_isDestroyed; }
 

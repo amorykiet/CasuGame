@@ -42,7 +42,7 @@
     <ClCompile Include="thirdparty\imgui\rlImGui.cpp">
       <Filter>Source Files\thirdparty\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Main.cpp">
+    <ClCompile Include="src\Editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="thirdparty\imgui\include\rlImGuiColors.h">
       <Filter>Source Files\thirdparty\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

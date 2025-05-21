@@ -91,7 +91,6 @@ void Node::Ready()
 
 void Node::Update(float deltaTime)
 {
-	printf("Update %s\n", m_path.GetPath().c_str());
 	// Initialize pending nodes
 	if (!m_pendingInitNodes.empty())
 	{

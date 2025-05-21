@@ -33,6 +33,9 @@ void World::_Ready()
 }
 
 void World::_Update(float dt) {
+	if (InputManager::GetInstance()->IsKeyPressed(KEY_K)) {
+		SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+	}
 
 	if (!isPlaying)
 	{

@@ -7,6 +7,7 @@
 void Enemy::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
+	element->SetAttribute("size", size);
 	element->SetAttribute("directionX", direction.x);
 	element->SetAttribute("directionY", direction.y);
     Node::SerializeToXML(element, doc);
@@ -15,6 +16,7 @@ void Enemy::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument*
 void Enemy::DeserializeFromXML(tinyxml2::XMLElement* element) {
 	element->QueryFloatAttribute("x", &position.x);
 	element->QueryFloatAttribute("y", &position.y);
+	element->QueryIntAttribute("size", &size);
 	element->QueryFloatAttribute("directionX", &direction.x);
 	element->QueryFloatAttribute("directionY", &direction.y);
     Node::DeserializeFromXML(element);
@@ -34,6 +36,7 @@ void Enemy::_Ready() {
 	}
     // Set up collision detection
     collision->AddOnCollisionEnterCallback(std::bind(&Enemy::OnCollisionEnter, this, std::placeholders::_1));
+	size = collision->GetSize().x;
 }
 
 void Enemy::_Update(float dt) {
@@ -57,12 +60,8 @@ void Enemy::_Update(float dt) {
 	}
 }
 
-void Enemy::_Render() {
-    if (collision)
-    {
-	    RenderManager::GetInstance()->DrawCircleV(position, collision->GetSize().x, RED);
-    }
-
+void Enemy::_Render() {	
+    RenderManager::GetInstance()->DrawCircleV(position, size, RED);
 }
 
 void Enemy::_Destroy() {
