@@ -4,16 +4,29 @@
 #include "manager/RenderManager.h"
 #include "MainLoop.h"
 
+#include "imgui.h"
+
 void Player::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
+	element->SetAttribute("size", size);
 	Node::SerializeToXML(element, doc);
 }
 
 void Player::DeserializeFromXML(tinyxml2::XMLElement* element) {
 	element->QueryFloatAttribute("x", &position.x);
 	element->QueryFloatAttribute("y", &position.y);
+	element->QueryFloatAttribute("size", &size);
 	Node::DeserializeFromXML(element);
+}
+
+void Player::_ShowInspector()
+{
+	Node::_ShowInspector();
+	ImGui::Separator();
+	ImGui::InputFloat("Position X", &position.x);
+	ImGui::InputFloat("Position Y", &position.y);
+	ImGui::InputFloat("Size", &size);
 }
 
 void Player::_Ready() {
@@ -28,7 +41,7 @@ void Player::_Ready() {
 	}
 	else
 	{
-		collision = new Collision(position.x, position.y, 25.0f, 25.0f);
+		collision = new Collision(position.x, position.y, size, size);
 		AddChild(collision);
 		CollisionManager::GetInstance()->AddCollision(collision);
 	}
@@ -52,12 +65,12 @@ void Player::_Update(float dt) {
 	//update collision position
 	if (collision)
 	{
-		collision->SetPosition(position - collision->GetSize() / 2.0f);
+		collision->SetPosition(position - RVector2(size) / 2.0f);
 	}
 }
 
 void Player::_Render() {
-	RenderManager::GetInstance()->DrawCircleV(position, 20, BLUE);
+	RenderManager::GetInstance()->DrawCircleV(position, size, BLUE);
 }
 
 void Player::_Destroy() {

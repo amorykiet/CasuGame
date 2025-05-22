@@ -50,7 +50,6 @@ void Collision::_ShowInspector()
 {
 	Node::_ShowInspector();
 	ImGui::Separator();
-	ImGui::Text("Collision Rec");
 	ImGui::Checkbox("Show Collision Rec", &m_isShowRec);
 	ImGui::InputFloat("X", &m_collisionRec.x);
 	ImGui::InputFloat("Y", &m_collisionRec.y);

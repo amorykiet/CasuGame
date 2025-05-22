@@ -9,6 +9,7 @@ public:
 
     virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
     virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override;
+	virtual void _ShowInspector() override;
     virtual void _Ready() override;
     virtual void _Update(float dt) override;
     virtual void _Render() override;
@@ -29,7 +30,7 @@ public:
 private:
     Collision* collision;
 	RVector2 position;
-    int size = 0;
+    int size = 20;
     RVector2 direction;
 	float speed = 100.0f; // Speed of the enemy
 	PlayerHit playerHitCallback; // Callback for player hit

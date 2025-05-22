@@ -4,12 +4,15 @@
 #include "SceneTree.h"
 #include "MainLoop.h"
 
+#include "imgui.h"
+
 void Enemy::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
 	element->SetAttribute("size", size);
 	element->SetAttribute("directionX", direction.x);
 	element->SetAttribute("directionY", direction.y);
+	element->SetAttribute("speed", speed);
     Node::SerializeToXML(element, doc);
 }
 
@@ -19,7 +22,20 @@ void Enemy::DeserializeFromXML(tinyxml2::XMLElement* element) {
 	element->QueryIntAttribute("size", &size);
 	element->QueryFloatAttribute("directionX", &direction.x);
 	element->QueryFloatAttribute("directionY", &direction.y);
+	element->QueryFloatAttribute("speed", &speed);
     Node::DeserializeFromXML(element);
+}
+
+void Enemy::_ShowInspector()
+{
+	Node::_ShowInspector();
+	ImGui::Separator();
+	ImGui::InputFloat("Position X", &position.x);
+	ImGui::InputFloat("Position Y", &position.y);
+	ImGui::InputInt("Size", &size);
+	ImGui::InputFloat("Speed", &speed);
+	ImGui::InputFloat("Direction X", &direction.x);
+	ImGui::InputFloat("Direction Y", &direction.y);
 }
 
 void Enemy::_Ready() {
@@ -30,13 +46,12 @@ void Enemy::_Ready() {
     }
 	else
 	{
-		collision = new Collision(position.x, position.y, 20.0f, 20.0f);
+		collision = new Collision(position.x, position.y, size, size);
 		AddChild(collision);
 		CollisionManager::GetInstance()->AddCollision(collision);
 	}
     // Set up collision detection
     collision->AddOnCollisionEnterCallback(std::bind(&Enemy::OnCollisionEnter, this, std::placeholders::_1));
-	size = collision->GetSize().x;
 }
 
 void Enemy::_Update(float dt) {
@@ -45,7 +60,7 @@ void Enemy::_Update(float dt) {
 	position.y += direction.y * speed * dt;
 	if (collision)
 	{
-		collision->SetPosition(position - collision->GetSize() / 2.0f);
+		collision->SetPosition(position - RVector2(size) / 2.0f);
 	}
 
     // Out of window

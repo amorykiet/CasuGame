@@ -8,6 +8,7 @@ class Player : public Node {
 public:
     virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
     virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override;
+	virtual void _ShowInspector() override;
     virtual void _Ready() override;
     virtual void _Update(float dt) override;
     virtual void _Render() override;
@@ -17,6 +18,7 @@ public:
 
 private:
     RVector2 position;
+	float size = 25.0f;
     Collision* collision;
 };
 

@@ -11,7 +11,7 @@
 #include "rlImGui.h"
 #include "imgui.h"
 
-#define USE_EDITOR
+//#define USE_EDITOR
 
 int main(void)
 {
@@ -22,13 +22,9 @@ int main(void)
 
 #else
     if (!SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE)) {
-	    Scene* scene = new Scene();
-	    scene->SetName("MainScene");
-	    World* world = new World();
-	    Player* player = new Player();
-	    world->AddChild(player);
-	    scene->AddChild(world);
-	    SceneTree::GetInstance()->AddScene(scene);
+		printf("Failed to load scene from XML\n");
+		printf("Please create a scene first\n");
+		return -1;
     }
 	//Run the main loop
 	MainLoop::GetInstance()->Run();
