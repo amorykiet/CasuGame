@@ -45,7 +45,7 @@ void Editor::Close()
 
 void Editor::Run()
 {
-    const int screenWidth = 800;
+    const int screenWidth = 900;
     const int screenHeight = 600;
 
     InitWindow(screenWidth, screenHeight, "CasuEngine Editor");
@@ -156,20 +156,30 @@ void Editor::ShowNodeContextMenu()
 {
     if (ImGui::BeginPopup("Context Menu"))
     {
-        if (ImGui::MenuItem("Remove"))
+        if (ImGui::Button("Remove"))
         {
             m_contextNode->Remove();
             m_contextNode = nullptr;
 			m_selectedNode = nullptr;
             SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
         }
-		if (ImGui::MenuItem("Add Child"))
-		{
-			Node* newNode = NodeFactory::Create("Node");
-			m_contextNode->AddChild(newNode);
-			m_selectedNode = newNode;
-			SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
-		}
+		ImGui::Separator();
+		static int selectedType = 0;
+		std::vector<std::string> classNames = NodeFactory::GetRegisteredClassNames();
+        std::vector<const char*> classNamePtrs;
+        for (const auto& name : classNames) {
+            classNamePtrs.push_back(name.c_str());
+        }
+        ImGui::Combo("Type", &selectedType, classNamePtrs.data(), (int)classNamePtrs.size());
+        ImGui::SameLine();
+        if (ImGui::Button("Add Child")) {
+            Node* newNode = NodeFactory::Create(classNames[selectedType]);
+            if (newNode && m_contextNode) {
+                m_contextNode->AddChild(newNode);
+                m_selectedNode = newNode;
+                SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+            }
+        }
 
         ImGui::EndPopup();
     }

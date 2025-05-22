@@ -22,6 +22,13 @@ public:
         throw std::runtime_error("Class not registered: " + className);
     }
 
+    static std::vector<std::string> GetRegisteredClassNames() {
+        std::vector<std::string> names;
+        for (const auto& pair : GetRegistry()) {
+            names.push_back(pair.first);
+        }
+        return names;
+    }
 private:
     // Registry to store class name and creation function pairs
     static std::unordered_map<std::string, std::function<Node* ()>>& GetRegistry() {
