@@ -20,9 +20,9 @@ void World::DeserializeFromXML(tinyxml2::XMLElement* element) {
 
 void World::_Ready()
 {
-	if (HasChild("Player"))
+	if (HasChildWithType("Player"))
 	{
-		player = dynamic_cast<Player*>(GetNode("Player"));
+		player = dynamic_cast<Player*>(GetChildByType("Player"));
 	}
 	else
 	{

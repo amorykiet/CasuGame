@@ -13,8 +13,11 @@ public:
 
 	virtual ~Collision() = default;
 
+	virtual void _Render() override;
+
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
 	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override;
+	virtual void _ShowInspector() override;
 	virtual void _Destroy() override;
 
 	Collision();

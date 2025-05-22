@@ -90,7 +90,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(ProjectDir)thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -107,7 +107,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(ProjectDir)thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -124,7 +124,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(ProjectDir)thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -141,7 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(ProjectDir)thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -174,6 +174,11 @@
     <ClInclude Include="thirdparty\imgui\include\imstb_truetype.h" />
     <ClInclude Include="thirdparty\imgui\include\rlImGui.h" />
     <ClInclude Include="thirdparty\imgui\include\rlImGuiColors.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CasuEngine\CasuEngine.vcxproj">
+      <Project>{c2560248-9057-4407-95cc-9a05f0cdc77a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

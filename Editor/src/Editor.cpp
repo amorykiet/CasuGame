@@ -2,8 +2,10 @@
 #include "engine/SceneTree.h"
 #include "engine/CasuEngineDef.h"
 #include "imgui.h"
-#include "raylib.h"
 #include "engine/MainLoop.h"
+#include "rlImGui.h"
+#include "raylib.h"
+#include "raymath.h"
 
 void Editor::Init()
 {
@@ -12,13 +14,22 @@ void Editor::Init()
 
 void Editor::Update()
 {
-	// Update the editor logic here
+    ShowNodeTree(SceneTree::GetInstance()->GetCurrentScene());
 	if (m_selectedNode)
 	{
 		ShowNodeInspector(m_selectedNode);
 	}
-	ShowNodeTree(SceneTree::GetInstance()->GetCurrentScene());
-	ShowAddNodeMenu();
+
+    if (ShouldShowContextPopup)
+    {
+        ImGui::OpenPopup("Context Menu");
+		ShouldShowContextPopup = false;
+    }
+
+    if (m_contextNode)
+    {
+		ShowNodeContextMenu();
+    }
 }
 
 void Editor::Render()
@@ -32,9 +43,63 @@ void Editor::Close()
 	SceneTree::GetInstance()->Destroy();
 }
 
+void Editor::Run()
+{
+    const int screenWidth = 800;
+    const int screenHeight = 600;
+
+    InitWindow(screenWidth, screenHeight, "CasuEngine Editor");
+    Camera2D camera = { 0 };
+    camera.zoom = 1.0f;
+
+    SetTargetFPS(60);
+
+    rlImGuiSetup(true);
+    Editor::GetInstance()->Init();
+    while (!WindowShouldClose())
+    {
+        if (!ImGui::GetIO().WantCaptureMouse) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            {
+                Vector2 delta = GetMouseDelta();
+                delta = Vector2Scale(delta, -1.0f / camera.zoom);
+                camera.target = Vector2Add(camera.target, delta);
+            }
+            float wheel = GetMouseWheelMove();
+            if (wheel != 0)
+            {
+                Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+                camera.offset = GetMousePosition();
+                camera.target = mouseWorldPos;
+                float scale = 0.2f * wheel;
+                camera.zoom = Clamp(expf(logf(camera.zoom) + scale), 0.125f, 64.0f);
+            }
+        }
+
+        BeginDrawing();
+        rlImGuiBegin();
+        ClearBackground(RAYWHITE);
+
+        Editor::GetInstance()->Update();
+
+        BeginMode2D(camera);
+        Editor::GetInstance()->Render();
+        EndMode2D();
+
+        rlImGuiEnd();
+        EndDrawing();
+    }
+
+    Editor::GetInstance()->Close();
+    rlImGuiShutdown();
+    CloseWindow();
+}
+
 void Editor::ShowNodeTree(Scene * scene)
 {
 	if (scene == nullptr) return;
+	ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::Begin("Node Tree");
 	ShowNodeTreeRecursive(static_cast<Node*>(scene));
 	ImGui::End();
@@ -50,6 +115,11 @@ void Editor::ShowNodeTreeRecursive(Node* node)
         if (ImGui::Selectable(node->GetName().c_str(), isSelected)) {
             m_selectedNode = node;
         }
+        if (ImGui::IsItemClicked(1) && !ShouldShowContextPopup) {
+            m_selectedNode = node;
+            m_contextNode = node;
+            ShouldShowContextPopup = true;
+        }
         return;
     }
 
@@ -57,11 +127,16 @@ void Editor::ShowNodeTreeRecursive(Node* node)
     if (isSelected)
         flags |= ImGuiTreeNodeFlags_Selected;
 
-    bool nodeOpen = ImGui::TreeNodeEx(node->GetName().c_str(), flags);
-    if (ImGui::IsItemClicked()) {
+    bool isNodeOpen = ImGui::TreeNodeEx(node->GetName().c_str(), flags);
+    if (ImGui::IsItemClicked(0)) {
         m_selectedNode = node;
     }
-    if (nodeOpen) {
+	if (ImGui::IsItemClicked(1) && !ShouldShowContextPopup) {
+        m_selectedNode = node;
+		m_contextNode = node;
+        ShouldShowContextPopup = true;
+	}
+    if (isNodeOpen) {
         for (Node* child : childs) {
             ShowNodeTreeRecursive(child);
         }
@@ -71,10 +146,37 @@ void Editor::ShowNodeTreeRecursive(Node* node)
 	
 void Editor::ShowNodeInspector(Node* node)
 {
+    if (node == nullptr) return;
+	ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(320, 10), ImGuiCond_FirstUseEver);
+	node->ShowInspector();
 }
 
-void Editor::ShowAddNodeMenu()
+void Editor::ShowNodeContextMenu()
 {
+    if (ImGui::BeginPopup("Context Menu"))
+    {
+        if (ImGui::MenuItem("Remove"))
+        {
+            m_contextNode->Remove();
+            m_contextNode = nullptr;
+			m_selectedNode = nullptr;
+            SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+        }
+		if (ImGui::MenuItem("Add Child"))
+		{
+			Node* newNode = NodeFactory::Create("Node");
+			m_contextNode->AddChild(newNode);
+			m_selectedNode = newNode;
+			SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+		}
+
+        ImGui::EndPopup();
+    }
+
+    if (!ImGui::IsPopupOpen("Context Menu")) {
+        m_contextNode = nullptr;
+    }
 }
 
 void Editor::ShowGameWindowBox()
@@ -84,4 +186,13 @@ void Editor::ShowGameWindowBox()
 	int windowWidth = MainLoop::GetInstance()->GetWidth();
 	int windowHeight = MainLoop::GetInstance()->GetHeight();
 	DrawRectangleLines(0, 0, windowWidth, windowHeight, BLACK);
+}
+
+void Editor::RemoveCurrentNode()
+{
+	if (m_selectedNode)
+	{
+		m_selectedNode->Remove();
+		m_selectedNode = nullptr;
+	}
 }

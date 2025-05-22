@@ -2,6 +2,16 @@
 #include <algorithm>
 #include <cstdio>
 
+#include "imgui.h"
+
+#define USE_EDITOR
+void Collision::_Render()
+{
+#if defined(USE_EDITOR)
+	m_collisionRec.DrawLines(PURPLE);
+#endif
+}
+
 void Collision::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
 {
 	element->SetAttribute("x", m_collisionRec.x);
@@ -32,6 +42,33 @@ void Collision::DeserializeFromXML(tinyxml2::XMLElement* element)
 		m_masks.push_back(mask);
 	}
 	Node::DeserializeFromXML(element);
+}
+
+void Collision::_ShowInspector()
+{
+	Node::_ShowInspector();
+	ImGui::Separator();
+	ImGui::Text("Collision Rec");
+	ImGui::InputFloat("X", &m_collisionRec.x);
+	ImGui::InputFloat("Y", &m_collisionRec.y);
+	ImGui::InputFloat("Width", &m_collisionRec.width);
+	ImGui::InputFloat("Height", &m_collisionRec.height);
+	ImGui::InputInt("Layer", &m_layer);
+	ImGui::Text("Masks");
+	for (size_t i = 0; i < m_masks.size(); ++i) {
+		ImGui::InputInt(("Mask " + std::to_string(i)).c_str(), &m_masks[i]);
+	}
+	// remove mask
+	if (ImGui::Button("Remove Mask")) {
+		if (!m_masks.empty()) {
+			m_masks.pop_back();
+		}
+	}
+	// add mask
+	if (ImGui::Button("Add Mask")) {
+		m_masks.push_back(0);
+	}
+
 }
 
 void Collision::_Destroy()

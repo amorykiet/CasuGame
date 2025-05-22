@@ -21,9 +21,9 @@ void Player::_Ready() {
 	int windowHeight = MainLoop::GetInstance()->GetHeight();
 
 	position = RVector2(windowWidth / 2.0f, windowHeight / 2.0f);
-	if (HasChild("Collision"))
+	if (HasChildWithType("Collision"))
 	{
-		collision = dynamic_cast<Collision*>(GetNode("Collision"));
+		collision = dynamic_cast<Collision*>(GetChildByType("Collision"));
 		CollisionManager::GetInstance()->AddCollision(collision);
 	}
 	else

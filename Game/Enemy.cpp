@@ -23,9 +23,9 @@ void Enemy::DeserializeFromXML(tinyxml2::XMLElement* element) {
 }
 
 void Enemy::_Ready() {
-    if (HasChild("Collision"))
+    if (HasChildWithType("Collision"))
     {
-        collision = dynamic_cast<Collision*>(GetNode("Collision"));
+        collision = dynamic_cast<Collision*>(GetChildByType("Collision"));
         CollisionManager::GetInstance()->AddCollision(collision);
     }
 	else
@@ -69,10 +69,10 @@ void Enemy::_Destroy() {
 }
 
 void Enemy::OnCollisionEnter(Collision& other) {
-    if (other.GetParent()->GetName() == "Player") {
+    if (other.GetParent()->GetType() == "Player") {
         printf("Enemy collided with Player\n");
         NotifyPlayerHit();
         CollisionManager::GetInstance()->RemoveCollision(collision);
-        GetParent()->RemoveChild(this);// must have better way:)
+		Remove();
     }
 }

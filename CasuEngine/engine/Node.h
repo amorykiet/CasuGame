@@ -11,6 +11,8 @@ class SceneTree;
 class Node
 {
 public:
+	friend class SceneTree;
+
 	virtual ~Node() = default;
 
 	//Callbacks for game logic
@@ -20,6 +22,7 @@ public:
 	virtual void _Render();
 	virtual void _Destroy();
 
+	virtual void _ShowInspector();
 	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc);
 	virtual void DeserializeFromXML(tinyxml2::XMLElement* element);
 
@@ -42,13 +45,18 @@ public:
 
 	Node* GetNode(const NodePath& path);
 	Node* GetNode(const std::string& path);
+	Node* GetChildByType(const std::string& name);
 	bool HasChild(const NodePath& path);
 	bool HasChild(const std::string& name);
+	bool HasChildWithType(const std::string& type);
     const std::vector<Node*>& GetChilds() const { return m_childs; }
-	void Destroy();
 	bool isDestroyed() const { return m_isDestroyed; }
 
+	void ShowInspector();
+	void Remove();
+
 protected:
+	void Destroy();
 	bool m_isDestroyed = false;
 	NodePath m_path;
 	std::string name;

@@ -29,6 +29,14 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CasuEngine\CasuEngine.vcxproj">
+      <Project>{c2560248-9057-4407-95cc-9a05f0cdc77a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Editor\Editor.vcxproj">
+      <Project>{42ff4074-c075-4578-aa23-e8e499ea2553}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -109,7 +117,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Editor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -128,7 +137,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Editor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -147,7 +157,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Editor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -166,7 +177,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Editor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

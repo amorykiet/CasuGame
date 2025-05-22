@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <tinyxml2.h> //XML handling
 
+#include "imgui.h"
+
 void Node::_Init()
 {
 	//callback for game logic
@@ -26,6 +28,17 @@ void Node::_Render()
 
 void Node::_Destroy()
 {
+}
+
+void Node::_ShowInspector()
+{
+	ImGui::Text("Type: %s", GetType().c_str());
+	ImGui::Separator();
+	static char nameBuffer[256];
+	ImGui::InputText("Name##set", nameBuffer, sizeof(nameBuffer));
+	if (ImGui::Button("Set Name")) {
+		SetName(nameBuffer);
+	}
 }
 
 void Node::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
@@ -213,7 +226,16 @@ void Node::RemoveChild(Node* child)
 	if (child == nullptr) return;
 	child->m_isDestroyed = true;
 	// Mark the child for deferred deletion
-	child->GetParent()->m_pendingRemoveNodes.push_back(child);
+	if (MainLoop::GetInstance()->IsRunning())
+	{
+		child->GetParent()->m_pendingRemoveNodes.push_back(child);
+	}
+	else
+	{
+		m_childs.erase(std::remove(m_childs.begin(), m_childs.end(), child), m_childs.end());
+		child->Destroy();
+		delete child;
+	}
 }
 
 
@@ -255,6 +277,16 @@ Node* Node::GetNode(const std::string& path)
 	return GetNode(nodePath);
 }
 
+Node* Node::GetChildByType(const std::string& name)
+{
+	for (auto child : m_childs) {
+		if (child->GetType() == name) {
+			return child;
+		}
+	}
+	return nullptr;
+}
+
 bool Node::HasChild(const NodePath& path)
 {
 	Node* node = GetNode(path);
@@ -267,6 +299,16 @@ bool Node::HasChild(const std::string& name)
 	return HasChild(nodePath);
 }
 
+bool Node::HasChildWithType(const std::string& type)
+{
+	for (auto child : m_childs) {
+		if (child->GetType() == type) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Node::Destroy()
 {
 	_Destroy();
@@ -276,4 +318,28 @@ void Node::Destroy()
 		delete child;
 	}
 	m_childs.clear();
+}
+
+void Node::ShowInspector()
+{
+	ImGui::SetNextWindowPos(ImVec2(300, 10), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+	ImGui::Begin(name.c_str());
+	if (ImGui::Button("Save##NodePro"))
+	{
+		SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+	}
+	_ShowInspector();
+	ImGui::End();
+}
+
+void Node::Remove()
+{
+	if (m_parent) {
+		m_parent->RemoveChild(this);
+	}
+	else {
+		Destroy();
+		delete this;
+	}
 }
