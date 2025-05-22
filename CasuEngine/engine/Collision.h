@@ -47,7 +47,10 @@ public:
 	void AddOnCollisionEnterCallback(CollisionCallback callback);
 	void AddOnCollisionReleaseCallback(CollisionCallback callback);
 
+	void ShowCollisionRec(bool show);
+
 private:
+	bool						m_isShowRec = false;	// Show collision rectangle
 	RRectangle					m_collisionRec;
 	int							m_layer;					// Layer that other check collision to
 	std::vector<int>			m_masks;					// Mask of other that this can collide with

@@ -4,16 +4,17 @@
 
 #include "imgui.h"
 
-#define USE_EDITOR
 void Collision::_Render()
 {
-#if defined(USE_EDITOR)
-	m_collisionRec.DrawLines(PURPLE);
-#endif
+	if (m_isShowRec)
+	{
+		m_collisionRec.DrawLines(PURPLE);
+	}
 }
 
 void Collision::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
 {
+	element->SetAttribute("showRec", m_isShowRec);
 	element->SetAttribute("x", m_collisionRec.x);
 	element->SetAttribute("y", m_collisionRec.y);
 	element->SetAttribute("width", m_collisionRec.width);
@@ -28,6 +29,7 @@ void Collision::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocum
 
 void Collision::DeserializeFromXML(tinyxml2::XMLElement* element)
 {
+	element->QueryBoolAttribute("showRec", &m_isShowRec);
 	element->QueryFloatAttribute("x", &m_collisionRec.x);
 	element->QueryFloatAttribute("y", &m_collisionRec.y);
 	element->QueryFloatAttribute("width", &m_collisionRec.width);
@@ -49,6 +51,7 @@ void Collision::_ShowInspector()
 	Node::_ShowInspector();
 	ImGui::Separator();
 	ImGui::Text("Collision Rec");
+	ImGui::Checkbox("Show Collision Rec", &m_isShowRec);
 	ImGui::InputFloat("X", &m_collisionRec.x);
 	ImGui::InputFloat("Y", &m_collisionRec.y);
 	ImGui::InputFloat("Width", &m_collisionRec.width);
@@ -161,4 +164,9 @@ void Collision::AddOnCollisionEnterCallback(CollisionCallback callback)
 void Collision::AddOnCollisionReleaseCallback(CollisionCallback callback)
 {
 	m_onCollisionReleaseCallbacks.push_back(callback);
+}
+
+void Collision::ShowCollisionRec(bool show)
+{
+	m_isShowRec = show;
 }
