@@ -9,7 +9,13 @@
 
 void Editor::Init()
 {
-	SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE);
+    if (!SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE))
+    {
+        Scene* newScene = new Scene();
+        newScene->SetName("MainScene");
+        SceneTree::GetInstance()->AddScene(newScene);
+    }
+	
 }
 
 void Editor::Update()
