@@ -32,11 +32,11 @@ public:
 	void Render();
 
 	void SetName(const std::string& name);
-	const std::string& GetName() const { return name; }
-	void SetParent(Node* parent) { m_parent = parent; }
-	void SetRoot(SceneTree* root) { m_root = root; }
-	Node* GetParent() { return m_parent; }
-	SceneTree* GetRoot() { return m_root; }
+	const std::string& GetName();
+	void SetParent(Node* parent);
+	void SetRoot(SceneTree* root);
+	Node* GetParent();
+	SceneTree* GetRoot();
 
 	std::string GetType();
 	void ValidateName(std::string& name);
@@ -49,8 +49,8 @@ public:
 	bool HasChild(const NodePath& path);
 	bool HasChild(const std::string& name);
 	bool HasChildWithType(const std::string& type);
-    const std::vector<Node*>& GetChilds() const { return m_childs; }
-	bool isDestroyed() const { return m_isDestroyed; }
+	const std::vector<Node*>& GetChilds();
+	bool isDestroyed();
 
 	void ShowInspector();
 	void Remove();

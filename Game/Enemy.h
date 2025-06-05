@@ -15,14 +15,14 @@ public:
     virtual void _Render() override;
     virtual void _Destroy() override;
 
-    void SetPlayerHitCallback(PlayerHit callback) { playerHitCallback = callback; }
-    void NotifyPlayerHit() { if (playerHitCallback) playerHitCallback(); }
+    void SetPlayerHitCallback(PlayerHit callback);
+    void NotifyPlayerHit();
 
-	void SetPosition(RVector2 pos) { position = pos; }
-	void SetDirection(RVector2 dir) { direction = dir; }
-	void SetSpeed(float spd) { speed = spd; }
+    void SetPosition(RVector2 pos);
+    void SetDirection(RVector2 dir);
+    void SetSpeed(float spd);
 
-	Collision* GetCollision() { return collision; }
+    Collision* GetCollision();
 
 	// callback for collision events
     void OnCollisionEnter(Collision& other);

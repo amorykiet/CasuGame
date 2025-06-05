@@ -4,6 +4,11 @@
 #include "manager/CollisionManager.h"
 #include "tinyxml2.h"
 
+bool MainLoop::IsRunning()
+{
+	return isRunning;
+}
+
 void MainLoop::Run()
 {
 	LoadConfig();
@@ -50,6 +55,36 @@ void MainLoop::Run()
 	RenderManager::GetInstance()->Close();
 
 	SaveConfig();
+}
+
+std::string MainLoop::GetTitle()
+{
+	return title;
+}
+
+int MainLoop::GetWidth()
+{
+	return width;
+}
+
+int MainLoop::GetHeight()
+{
+	return height;
+}
+
+void MainLoop::SetTitle(const std::string& title)
+{
+	this->title = title;
+}
+
+void MainLoop::SetWidth(int width)
+{
+	this->width = width;
+}
+
+void MainLoop::SetHeight(int height)
+{
+	this->height = height;
 }
 
 void MainLoop::Update(float deltaTime)

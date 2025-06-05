@@ -7,6 +7,11 @@ void SceneTree::AddScene(Scene* scene)
 	currentScene = scene;
 }
 
+Scene* SceneTree::GetCurrentScene()
+{
+	return currentScene;
+}
+
 void SceneTree::Init()
 {
 	if (currentScene)

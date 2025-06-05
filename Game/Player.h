@@ -3,7 +3,6 @@
 #include "Collision.h"
 #include "core/Vector2.h"
 
-/// A simple player class that inherits from Node
 class Player : public Node {
 public:
     virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
@@ -14,7 +13,7 @@ public:
     virtual void _Render() override;
     virtual void _Destroy() override;
 
-	RVector2 GetPosition() const { return position; }
+    RVector2 GetPosition();
 
 private:
     RVector2 position;

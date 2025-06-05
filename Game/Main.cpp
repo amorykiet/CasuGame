@@ -4,7 +4,6 @@
 #include "Enemy.h"
 #include "World.h"
 
-#include "vld.h"
 #include "Editor.h"
 
 #include "raylib.h"

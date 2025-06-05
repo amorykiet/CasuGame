@@ -76,3 +76,8 @@ void Player::_Render() {
 void Player::_Destroy() {
 	CollisionManager::GetInstance()->RemoveCollision(collision);
 }
+
+RVector2 Player::GetPosition()
+{
+	return position;
+}

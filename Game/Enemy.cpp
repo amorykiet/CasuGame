@@ -71,7 +71,7 @@ void Enemy::_Update(float dt) {
 	if (position.x < -padding|| position.x > windowWidth + padding|| position.y < - padding || position.y > windowHeight + padding)
 	{
         CollisionManager::GetInstance()->RemoveCollision(collision);
-		GetParent()->RemoveChild(this);
+		Remove();
 	}
 }
 
@@ -81,6 +81,38 @@ void Enemy::_Render() {
 
 void Enemy::_Destroy() {
     CollisionManager::GetInstance()->RemoveCollision(collision);
+}
+
+void Enemy::SetPlayerHitCallback(PlayerHit callback)
+{
+	playerHitCallback = callback;
+}
+
+void Enemy::NotifyPlayerHit()
+{
+	if (playerHitCallback)
+	{
+		playerHitCallback();
+	}
+}
+
+Collision* Enemy::GetCollision() {
+	return collision;
+}
+
+void Enemy::SetPosition(RVector2 pos) {
+	position = pos;
+	if (collision) {
+		collision->SetPosition(position - RVector2(size) / 2.0f);
+	}
+}
+
+void Enemy::SetDirection(RVector2 dir) {
+	direction = dir;
+}
+
+void Enemy::SetSpeed(float spd) {
+	speed = spd;
 }
 
 void Enemy::OnCollisionEnter(Collision& other) {

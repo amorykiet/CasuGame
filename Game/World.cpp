@@ -7,8 +7,6 @@
 #include "manager/RenderManager.h"
 #include "manager/CollisionManager.h"
 
-// Add a timer member to World
-// (Add this to World class definition in World.h: float enemySpawnTimer = 0.0f; const float enemySpawnInterval = 4.0f;)
 
 void World::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	Node::SerializeToXML(element, doc);

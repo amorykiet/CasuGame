@@ -159,6 +159,31 @@ void Node::SetName(const std::string& name)
 	}  
 }
 
+const std::string& Node::GetName()
+{
+	return name;
+}
+
+void Node::SetParent(Node* parent)
+{
+	m_parent = parent;
+}
+
+void Node::SetRoot(SceneTree* root)
+{
+	m_root = root;
+}
+
+Node* Node::GetParent()
+{
+	return m_parent;
+}
+
+SceneTree* Node::GetRoot()
+{
+	return m_root;
+}
+
 std::string Node::GetType()
 {
 	std::string name = typeid(*this).name();
@@ -307,6 +332,16 @@ bool Node::HasChildWithType(const std::string& type)
 		}
 	}
 	return false;
+}
+
+const std::vector<Node*>& Node::GetChilds()
+{
+	return m_childs;
+}
+
+bool Node::isDestroyed()
+{
+	return m_isDestroyed;
 }
 
 void Node::Destroy()
