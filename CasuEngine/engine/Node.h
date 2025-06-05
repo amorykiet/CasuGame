@@ -55,11 +55,14 @@ public:
 	void ShowInspector();
 	void Remove();
 
+	void SaveAsScene(const std::string& filePath);
+	void SaveAsScene();
+
 protected:
 	void Destroy();
 	bool m_isDestroyed = false;
 	NodePath m_path;
-	std::string name;
+	std::string m_name;
 	std::vector<Node*> m_childs;
 	Node* m_parent;
 	SceneTree* m_root;

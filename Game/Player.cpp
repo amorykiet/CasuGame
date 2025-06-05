@@ -38,12 +38,7 @@ void Player::_Ready() {
 	{
 		collision = dynamic_cast<Collision*>(GetChildByType("Collision"));
 		CollisionManager::GetInstance()->AddCollision(collision);
-	}
-	else
-	{
-		collision = new Collision(position.x, position.y, size, size);
-		AddChild(collision);
-		CollisionManager::GetInstance()->AddCollision(collision);
+		collisionOffset = collision->GetPosition();
 	}
 }
 
@@ -65,7 +60,7 @@ void Player::_Update(float dt) {
 	//update collision position
 	if (collision)
 	{
-		collision->SetPosition(position - RVector2(size) / 2.0f);
+		collision->SetPosition(position + collisionOffset);
 	}
 }
 

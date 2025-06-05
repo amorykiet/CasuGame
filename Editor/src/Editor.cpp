@@ -9,7 +9,7 @@
 
 void Editor::Init()
 {
-    if (!SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE))
+    if (!SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_DEFAULT_FILE))
     {
         Scene* newScene = new Scene();
         newScene->SetName("MainScene");
@@ -20,6 +20,7 @@ void Editor::Init()
 
 void Editor::Update()
 {
+	ShowMenuBar();
     ShowNodeTree(SceneTree::GetInstance()->GetCurrentScene());
 	if (m_selectedNode)
 	{
@@ -36,6 +37,15 @@ void Editor::Update()
     {
 		ShowNodeContextMenu();
     }
+
+    if (ShouldShowLoadScenePopup) {
+		ImGui::OpenPopup("Load Scene");
+		ShouldShowLoadScenePopup = false;
+    }
+
+	if (ImGui::IsPopupOpen("Load Scene")) {
+		ShowLoadScenePopup();
+	}
 }
 
 void Editor::Render()
@@ -46,6 +56,7 @@ void Editor::Render()
 
 void Editor::Close()
 {
+	SceneTree::GetInstance()->SaveCurrentSceneToXML();
 	SceneTree::GetInstance()->Destroy();
 }
 
@@ -167,7 +178,7 @@ void Editor::ShowNodeContextMenu()
             m_contextNode->Remove();
             m_contextNode = nullptr;
 			m_selectedNode = nullptr;
-            SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+            SceneTree::GetInstance()->SaveCurrentSceneToXML();
         }
 		ImGui::Separator();
 		static int selectedType = 0;
@@ -183,9 +194,20 @@ void Editor::ShowNodeContextMenu()
             if (newNode && m_contextNode) {
                 m_contextNode->AddChild(newNode);
                 m_selectedNode = newNode;
-                SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+                SceneTree::GetInstance()->SaveCurrentSceneToXML();
             }
         }
+        ImGui::Separator();
+        //save as sceen with enter name
+		static char saveNameBuffer[256] = "";
+		ImGui::InputText("Name##Scene", saveNameBuffer, sizeof(saveNameBuffer));
+		ImGui::SameLine();
+		if (ImGui::Button("Save As Scene")) {
+			if (m_contextNode) {
+				std::string filePath = std::string(GAME_SCENE_FOLDER) + saveNameBuffer + ".scene";
+				m_contextNode->SaveAsScene(filePath);
+			}
+		}
 
         ImGui::EndPopup();
     }
@@ -211,4 +233,46 @@ void Editor::RemoveCurrentNode()
 		m_selectedNode->Remove();
 		m_selectedNode = nullptr;
 	}
+}
+				
+void Editor::ShowMenuBar()
+{
+    static char loadSceneBuffer[256] = "";
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("File"))
+        {
+            if (ImGui::MenuItem("Load Scene"))
+            {
+				ShouldShowLoadScenePopup = true;
+            }
+           
+            if (ImGui::MenuItem("Save Scene"))
+            {
+                SceneTree::GetInstance()->SaveCurrentSceneToXML();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+}
+
+void Editor::ShowLoadScenePopup()
+{
+	static char loadSceneBuffer[256] = "";
+    if (ImGui::BeginPopup("Load Scene"))
+    {
+        ImGui::InputText("Scene Name", loadSceneBuffer, sizeof(loadSceneBuffer));
+        ImGui::SameLine();
+        if (ImGui::Button("Load"))
+        {
+            if (strlen(loadSceneBuffer) > 0)
+            {
+                std::string filePath = std::string(GAME_SCENE_FOLDER) + loadSceneBuffer + ".scene";
+                SceneTree::GetInstance()->LoadSceneFromXML(filePath);
+                ImGui::CloseCurrentPopup();
+            }
+        }
+        ImGui::EndPopup();
+    }
 }

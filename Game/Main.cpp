@@ -20,7 +20,7 @@ int main(void)
 	Editor::GetInstance()->Run();
 
 #else
-    if (!SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_FILE)) {
+    if (!SceneTree::GetInstance()->LoadSceneFromXML(GAME_SCENE_DEFAULT_FILE)) {
 		printf("Failed to load scene from XML\n");
 		printf("Please create a scene first\n");
 		return -1;

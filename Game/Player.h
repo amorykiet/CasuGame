@@ -17,6 +17,7 @@ public:
 
 private:
     RVector2 position;
+    RVector2 collisionOffset;
 	float size = 25.0f;
     Collision* collision;
 };

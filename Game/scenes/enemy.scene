@@ -1,0 +1,3 @@
+<Scene x="0" y="0" size="20" directionX="0" directionY="0" speed="100" name="Enemy" path="MainScene/World/Enemy" type="Enemy">
+    <Collision showRec="false" x="-12.5" y="-12.5" width="25" height="25" layer="0" masks="1" mask0="0" name="Collision" path="MainScene/World/Enemy/Collision" type="Collision"/>
+</Scene>

@@ -78,6 +78,16 @@ void SceneTree::SaveCurrentSceneToXML(const std::string& filePath)
     }
 }
 
+void SceneTree::SaveCurrentSceneToXML()
+{
+	if (currentSceneFilePath.empty())
+	{
+		printf("Error: No file path specified for saving the scene.\n");
+		return;
+	}
+	SaveCurrentSceneToXML(currentSceneFilePath);
+}
+
 bool SceneTree::LoadSceneFromXML(const std::string& filePath)
 {
 	tinyxml2::XMLDocument doc;
@@ -86,27 +96,47 @@ bool SceneTree::LoadSceneFromXML(const std::string& filePath)
 		printf("Error loading XML file: %s\n", doc.ErrorName());
 		return false;
 	}
-
 	tinyxml2::XMLElement* root = doc.FirstChildElement("Scene");
-	if (root)
-	{
-		if (!currentScene)
-		{
-			currentScene = new Scene();
-		}
-		else
-		{
-			currentScene->Destroy();
-			delete currentScene;
-			currentScene = new Scene();
-		}
-		currentScene->DeserializeFromXML(root);
-	}
-	else
+	if (!root)
 	{
 		printf("Error: No root element found in XML file.\n");
 		return false;
 	}
+	currentSceneFilePath = filePath;
+	const char* tagName = root->Attribute("type");
+	currentScene = NodeFactory::Create(tagName);
+	if (currentScene)
+	{
+		currentScene->DeserializeFromXML(root);
+		currentScene->SetRoot(this);
+		return true;
+	}
+	else
+	{
+		printf("Error creating scene from XML.\n");
+		return false;
+	}
+}
 
-	return true;
+Node* SceneTree::LoadNodeFromScene(const std::string& filePath)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(filePath.c_str()) != tinyxml2::XML_SUCCESS)
+	{
+		printf("Error loading XML file: %s\n", doc.ErrorName());
+		return nullptr;
+	}
+	tinyxml2::XMLElement* root = doc.FirstChildElement("Scene");
+	if (root)
+	{
+		const char* tagName = root->Attribute("type");
+		Node* node = NodeFactory::Create(tagName);
+		node->DeserializeFromXML(root);
+		return node;
+	}
+	else
+	{
+		printf("Error: No root element found in XML file.\n");
+		return nullptr;
+	}
 }

@@ -43,15 +43,9 @@ void Enemy::_Ready() {
     {
         collision = dynamic_cast<Collision*>(GetChildByType("Collision"));
         CollisionManager::GetInstance()->AddCollision(collision);
+		collision->AddOnCollisionEnterCallback(std::bind(&Enemy::OnCollisionEnter, this, std::placeholders::_1));
+		collisionOffset = collision->GetPosition();
     }
-	else
-	{
-		collision = new Collision(position.x, position.y, size, size);
-		AddChild(collision);
-		CollisionManager::GetInstance()->AddCollision(collision);
-	}
-    // Set up collision detection
-    collision->AddOnCollisionEnterCallback(std::bind(&Enemy::OnCollisionEnter, this, std::placeholders::_1));
 }
 
 void Enemy::_Update(float dt) {
@@ -60,7 +54,7 @@ void Enemy::_Update(float dt) {
 	position.y += direction.y * speed * dt;
 	if (collision)
 	{
-		collision->SetPosition(position - RVector2(size) / 2.0f);
+		collision->SetPosition(position + collisionOffset);
 	}
 
     // Out of window
@@ -102,9 +96,6 @@ Collision* Enemy::GetCollision() {
 
 void Enemy::SetPosition(RVector2 pos) {
 	position = pos;
-	if (collision) {
-		collision->SetPosition(position - RVector2(size) / 2.0f);
-	}
 }
 
 void Enemy::SetDirection(RVector2 dir) {

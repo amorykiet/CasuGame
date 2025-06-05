@@ -30,6 +30,7 @@ public:
 private:
     Collision* collision;
 	RVector2 position;
+    RVector2 collisionOffset;
     int size = 20;
     RVector2 direction;
 	float speed = 100.0f; // Speed of the enemy

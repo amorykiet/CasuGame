@@ -24,24 +24,24 @@ void World::_Ready()
 	}
 	else
 	{
-		player = new Player();
-		AddChild(player);
+		std::string playerPath = std::string(GAME_SCENE_FOLDER) + "player.scene";
+		player = dynamic_cast<Player*>(SceneTree::GetInstance()->LoadNodeFromScene(playerPath));
+		if (player) {
+			AddChild(player);
+		}
 	}
 	enemySpawnTimer = 0.0f;
 }
 
 void World::_Update(float dt) {
-	if (InputManager::GetInstance()->IsKeyPressed(KEY_K)) {
-		SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
-	}
-
 	if (!isPlaying)
 	{
 		RenderManager::GetInstance()->DrawText("Player Hit!", 10, 10, 70, YELLOW);
 		RenderManager::GetInstance()->DrawText("Space to restart", 10, 100, 50, YELLOW);
 		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE)) {
-			isPlaying = true;		
-			player = new Player();
+			isPlaying = true;
+            std::string playerPath = std::string(GAME_SCENE_FOLDER) + "player.scene";
+			player = dynamic_cast<Player*>(SceneTree::GetInstance()->LoadNodeFromScene(playerPath));
 			AddChild(player);
 
 			// Clear all enemies
@@ -66,7 +66,9 @@ void World::_Update(float dt) {
 	enemySpawnTimer += dt;
 	if (enemySpawnTimer >= enemySpawnInterval) {
 		enemySpawnTimer = 0.0f;
-		Enemy* enemy = new Enemy();
+		std::string enemyPath = std::string(GAME_SCENE_FOLDER) + "enemy.scene";
+		Enemy* enemy = dynamic_cast<Enemy*>(SceneTree::GetInstance()->LoadNodeFromScene(enemyPath));
+
 		//Spawn random position of enemy outside the window then move it toward player
 		int windowWidth = MainLoop::GetInstance()->GetWidth();
 		int windowHeight = MainLoop::GetInstance()->GetHeight();

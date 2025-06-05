@@ -18,9 +18,12 @@ public:
 
 	void ShowGameWindowBox();
 	void RemoveCurrentNode();
+	void ShowMenuBar();
+	void ShowLoadScenePopup();
 
 private:
 	Node* m_selectedNode = nullptr;
 	Node* m_contextNode = nullptr;
 	bool ShouldShowContextPopup = false;
+	bool ShouldShowLoadScenePopup = false;
 };

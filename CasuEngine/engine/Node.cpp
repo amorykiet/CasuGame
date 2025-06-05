@@ -43,8 +43,9 @@ void Node::_ShowInspector()
 
 void Node::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
 {
-	element->SetAttribute("name", name.c_str());
+	element->SetAttribute("name", m_name.c_str());
 	element->SetAttribute("path", m_path.GetPath().c_str());
+	element->SetAttribute("type", GetType().c_str());
 
 	for (auto child : m_childs) {
 		tinyxml2::XMLElement* childElement = doc->NewElement(child->GetType().c_str());
@@ -57,7 +58,7 @@ void Node::DeserializeFromXML(tinyxml2::XMLElement* element)
 {
 	const char* nameAttr = element->Attribute("name");
 	if (nameAttr) {
-		name = nameAttr;
+		m_name = nameAttr;
 	}
 	const char* pathAttr = element->Attribute("path");
 	if (pathAttr) {
@@ -69,7 +70,7 @@ void Node::DeserializeFromXML(tinyxml2::XMLElement* element)
 		childElement != nullptr;
 		childElement = childElement->NextSiblingElement()) {
 
-		const char* tagName = childElement->Name();
+		const char* tagName = childElement->Attribute("type");
 		Node* childNode = NodeFactory::Create(tagName);
 		childNode->DeserializeFromXML(childElement);
 		AddChild(childNode);
@@ -81,10 +82,10 @@ void Node::Init()
 	printf("Init %s\n", m_path.GetPath().c_str());
 	// Construct the path based on the parent's path
 	if (m_parent) {
-		m_path.SetPath(m_parent->m_path.GetPath() + "/" + name);
+		m_path.SetPath(m_parent->m_path.GetPath() + "/" + m_name);
 	}
 	else {
-		m_path.SetPath(name); // Root node's path is its own name
+		m_path.SetPath(m_name); // Root node's path is its own name
 	}
 
 	_Init();
@@ -143,14 +144,14 @@ void Node::Render()
 
 void Node::SetName(const std::string& name)  
 {  
-	this->name = name;  
+	this->m_name = name;
 	// Validate the name to ensure it's unique among siblings
-	ValidateName(this->name);  
+	ValidateName(this->m_name);
 	if (m_parent) {  
-		m_path.SetPath(m_parent->m_path.GetPath() + "/" + this->name);  
+		m_path.SetPath(m_parent->m_path.GetPath() + "/" + this->m_name);
 	}  
 	else {  
-		m_path.SetPath(this->name); // Root node's path is its own name  
+		m_path.SetPath(this->m_name); // Root node's path is its own name  
 	}  
 
 	// Update the paths of all child nodes recursively  
@@ -161,7 +162,7 @@ void Node::SetName(const std::string& name)
 
 const std::string& Node::GetName()
 {
-	return name;
+	return m_name;
 }
 
 void Node::SetParent(Node* parent)
@@ -235,13 +236,19 @@ void Node::AddChild(Node* child)
 	}
 
 	// Validate the name to ensure it's unique among siblings
-	child->SetName(child->name);
+	child->SetName(child->m_name);
 	m_childs.push_back(child);
 
 	// dynamically init the child node
 	if (MainLoop::GetInstance()->IsRunning())
 	{
 		m_pendingInitNodes.push_back(child);
+	}
+	// if the main loop is not running, we can call Init and Ready directly
+	else
+	{
+		child->Init();
+		child->Ready();
 	}
 }
 
@@ -359,10 +366,10 @@ void Node::ShowInspector()
 {
 	ImGui::SetNextWindowPos(ImVec2(300, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
-	ImGui::Begin(name.c_str());
+	ImGui::Begin(m_name.c_str());
 	if (ImGui::Button("Save##NodePro"))
 	{
-		SceneTree::GetInstance()->SaveCurrentSceneToXML(GAME_SCENE_FILE);
+		SceneTree::GetInstance()->SaveCurrentSceneToXML();
 	}
 	_ShowInspector();
 	ImGui::End();
@@ -377,4 +384,22 @@ void Node::Remove()
 		Destroy();
 		delete this;
 	}
+}
+
+void Node::SaveAsScene(const std::string& filePath)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement* root = doc.NewElement("Scene");
+	doc.InsertFirstChild(root);
+	SerializeToXML(root, &doc);
+	tinyxml2::XMLError result = doc.SaveFile(filePath.c_str());
+	if (result != tinyxml2::XML_SUCCESS) {
+		printf("Error saving scene to XML: %s\n", doc.ErrorName());
+	}
+}
+
+void Node::SaveAsScene()
+{
+	std::string filePath = m_name + ".scene";
+	SaveAsScene(filePath);
 }
