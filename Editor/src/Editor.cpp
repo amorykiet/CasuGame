@@ -117,7 +117,7 @@ void Editor::ShowNodeTree(Scene * scene)
 	if (scene == nullptr) return;
 	ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Node Tree");
+	ImGui::Begin("Scene Tree");
 	ShowNodeTreeRecursive(static_cast<Node*>(scene));
 	ImGui::End();
 }
