@@ -8,6 +8,10 @@
 
 #include "manager/AudioManager.h"
 
+#ifdef USE_TEXTURE
+#include "raymath.h"
+#endif
+
 void Enemy::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
@@ -72,7 +76,17 @@ void Enemy::_Update(float dt) {
 }
 
 void Enemy::_Render() {	
+#ifdef USE_TEXTURE
+	float rotation = Vector2Angle(RVector2(0, -1), direction) * (180.0f / PI);
+
+	RenderManager::GetInstance()->DrawTexturePro("assets/texture/enemy.png",
+		RRectangle(0, 0, 128, 128),
+		RRectangle(position.x, position.y, size, size),
+		RVector2(size/2, size/8),
+		rotation);
+#else
     RenderManager::GetInstance()->DrawCircleV(position, size, RED);
+#endif
 }
 
 void Enemy::_Destroy() {
