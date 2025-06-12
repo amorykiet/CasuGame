@@ -35,10 +35,12 @@ void World::_Ready()
 void World::_Update(float dt) {
 	if (!isPlaying)
 	{
+		RenderManager::GetInstance()->SetShader("assets/shader/bloom.fs");
 		RenderManager::GetInstance()->DrawText("Player Hit!", 10, 10, 70, YELLOW);
 		RenderManager::GetInstance()->DrawText("Space to restart", 10, 100, 50, YELLOW);
 		if (InputManager::GetInstance()->IsKeyPressed(KEY_SPACE)) {
 			isPlaying = true;
+			RenderManager::GetInstance()->SetDefaultShader();
             std::string playerPath = std::string(GAME_SCENE_FOLDER) + "player.scene";
 			player = dynamic_cast<Player*>(SceneTree::GetInstance()->LoadNodeFromScene(playerPath));
 			AddChild(player);
