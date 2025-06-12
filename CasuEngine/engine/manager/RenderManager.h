@@ -46,12 +46,14 @@ public:
 	void DrawTexture(RTexture2D texture, RVector2 position, float rotation, float scale, RColor tint = RAYWHITE);
 	void DrawTexture(RTexture2D texture, float posX, float posY, float rotation, float scale, RColor tint = RAYWHITE);
 	void DrawTextureRec(RTexture2D texture, RRectangle source, RVector2 position, RColor tint = RAYWHITE);
+	void DrawTexturePro(RTexture2D texture, RRectangle source, RRectangle dest, RVector2 origin = RVector2(0, 0), float rotation = 0, RColor tint = RAYWHITE);
 
 	void DrawTexture(std::string file, RVector2 position, RColor tint = RAYWHITE);
 	void DrawTexture(std::string file, float posX, float posY, RColor tint = RAYWHITE);
 	void DrawTexture(std::string file, RVector2 position, float rotation, float scale, RColor tint = RAYWHITE);
 	void DrawTexture(std::string file, float posX, float posY, float rotation, float scale, RColor tint = RAYWHITE);
 	void DrawTextureRec(std::string file, RRectangle source, RVector2 position, RColor tint = RAYWHITE);
+	void DrawTexturePro(std::string file, RRectangle source, RRectangle dest, RVector2 origin = RVector2(0, 0), float rotation = 0, RColor tint = RAYWHITE);
 
 	// Drawing Text
 	void DrawText(const char* text, float posX, float posY, float fontSize, const RColor& color);

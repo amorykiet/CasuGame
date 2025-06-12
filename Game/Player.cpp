@@ -65,7 +65,14 @@ void Player::_Update(float dt) {
 }
 
 void Player::_Render() {
+#ifdef USE_TEXTURE
+	RenderManager::GetInstance()->DrawTexturePro("assets/texture/player.png",
+		RRectangle(0, 0, 64, 64),
+		RRectangle(position.x - size/2, position.y - size/2, size, size));
+#else
 	RenderManager::GetInstance()->DrawCircleV(position, size, BLUE);
+#endif
+
 }
 
 void Player::_Destroy() {

@@ -179,6 +179,11 @@ void RenderManager::DrawTextureRec(RTexture2D texture, RRectangle source, RVecto
 	texture.Draw(source, position, tint);
 }
 
+void RenderManager::DrawTexturePro(RTexture2D texture, RRectangle source, RRectangle dest, RVector2 origin, float rotation, RColor tint)
+{
+	texture.Draw(source, dest, origin, rotation, tint);
+}
+
 void RenderManager::DrawTexture(std::string file, RVector2 position, RColor tint)
 {
 	RTexture* texture = ResourceManager::GetInstance()->GetResource<RTexture>(file);
@@ -217,6 +222,14 @@ void RenderManager::DrawTextureRec(std::string file, RRectangle source, RVector2
 	RTexture* texture = ResourceManager::GetInstance()->GetResource<RTexture>(file);
 	if (texture) {
 		texture->Draw(source, position, tint);
+	}
+}
+
+void RenderManager::DrawTexturePro(std::string file, RRectangle source, RRectangle dest, RVector2 origin, float rotation, RColor tint)
+{
+	RTexture* texture = ResourceManager::GetInstance()->GetResource<RTexture>(file);
+	if (texture) {
+		texture->Draw(source, dest, origin, rotation, tint);
 	}
 }
 

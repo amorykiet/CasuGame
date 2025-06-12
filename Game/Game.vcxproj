@@ -157,8 +157,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_TEXTURE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CasuEngine;$(SolutionDir)CasuEngine\thirdparty\imgui\include;$(SolutionDir)CasuEngine\thirdparty\tinyxml;$(SolutionDir)CasuEngine\thirdparty\raygui;$(SolutionDir)CasuEngine\thirdparty\raylib\include;$(SolutionDir)Editor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
