@@ -6,6 +6,8 @@
 
 #include "imgui.h"
 
+#include "manager/AudioManager.h"
+
 void Enemy::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
@@ -108,6 +110,7 @@ void Enemy::SetSpeed(float spd) {
 
 void Enemy::OnCollisionEnter(Collision& other) {
     if (other.GetParent()->GetType() == "Player") {
+		AudioManager::GetInstance()->PlaySound("assets/sound/coin.wav");
         printf("Enemy collided with Player\n");
         NotifyPlayerHit();
         CollisionManager::GetInstance()->RemoveCollision(collision);

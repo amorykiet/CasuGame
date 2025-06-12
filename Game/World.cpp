@@ -4,7 +4,7 @@
 #include "Enemy.h"
 #include "MainLoop.h"
 #include "manager/RenderManager.h"
-
+#include "manager/AudioManager.h"
 
 void World::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	Node::_SerializeToXML(element, doc);
@@ -29,6 +29,7 @@ void World::_Ready()
 		}
 	}
 	enemySpawnTimer = 0.0f;
+	AudioManager::GetInstance()->PlayMusic("assets/music/country.mp3");
 }
 
 void World::_Update(float dt) {
@@ -50,7 +51,14 @@ void World::_Update(float dt) {
 			}
 			enemies.clear();
 		}
+		if (AudioManager::GetInstance()->IsPlayingMusic()) {
+			AudioManager::GetInstance()->StopMusic();
+		}
 		return;
+	}
+
+	if (!AudioManager::GetInstance()->IsPlayingMusic()) {
+		AudioManager::GetInstance()->PlayMusic("assets/music/country.mp3");
 	}
 
 	// Check enemies out of window
