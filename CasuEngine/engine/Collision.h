@@ -15,8 +15,8 @@ public:
 
 	virtual void _Render() override;
 
-	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
-	virtual void DeserializeFromXML(tinyxml2::XMLElement* element) override;
+	virtual void _SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) override;
+	virtual void _DeserializeFromXML(tinyxml2::XMLElement* element) override;
 	virtual void _ShowInspector() override;
 	virtual void _Destroy() override;
 
@@ -50,12 +50,12 @@ public:
 	void ShowCollisionRec(bool show);
 
 private:
-	bool						m_isShowRec = false;	// Show collision rectangle
+	bool						m_isShowRec = false;
 	RRectangle					m_collisionRec;
-	int							m_layer;					// Layer that other check collision to
-	std::vector<int>			m_masks;					// Mask of other that this can collide with
-	std::vector<CollisionCallback>	m_onCollisionEnterCallbacks;	// Callbacks for collision enter
-	std::vector<CollisionCallback>	m_onCollisionReleaseCallbacks;	// Callbacks for collision release
+	int							m_layer;
+	std::vector<int>			m_masks;
+	std::vector<CollisionCallback>	m_onCollisionEnterCallbacks;
+	std::vector<CollisionCallback>	m_onCollisionReleaseCallbacks;
 };
 
 REGISTER_NODE_CLASS(Collision);

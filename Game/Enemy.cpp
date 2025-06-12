@@ -6,24 +6,24 @@
 
 #include "imgui.h"
 
-void Enemy::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
+void Enemy::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
 	element->SetAttribute("size", size);
 	element->SetAttribute("directionX", direction.x);
 	element->SetAttribute("directionY", direction.y);
 	element->SetAttribute("speed", speed);
-    Node::SerializeToXML(element, doc);
+    Node::_SerializeToXML(element, doc);
 }
 
-void Enemy::DeserializeFromXML(tinyxml2::XMLElement* element) {
+void Enemy::_DeserializeFromXML(tinyxml2::XMLElement* element) {
 	element->QueryFloatAttribute("x", &position.x);
 	element->QueryFloatAttribute("y", &position.y);
 	element->QueryIntAttribute("size", &size);
 	element->QueryFloatAttribute("directionX", &direction.x);
 	element->QueryFloatAttribute("directionY", &direction.y);
 	element->QueryFloatAttribute("speed", &speed);
-    Node::DeserializeFromXML(element);
+    Node::_DeserializeFromXML(element);
 }
 
 void Enemy::_ShowInspector()

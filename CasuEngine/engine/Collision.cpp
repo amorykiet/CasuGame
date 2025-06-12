@@ -12,7 +12,7 @@ void Collision::_Render()
 	}
 }
 
-void Collision::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
+void Collision::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
 {
 	element->SetAttribute("showRec", m_isShowRec);
 	element->SetAttribute("x", m_collisionRec.x);
@@ -24,10 +24,10 @@ void Collision::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocum
 	for (size_t i = 0; i < m_masks.size(); ++i) {
 		element->SetAttribute(("mask" + std::to_string(i)).c_str(), m_masks[i]);
 	}
-	Node::SerializeToXML(element, doc);
+	Node::_SerializeToXML(element, doc);
 }
 
-void Collision::DeserializeFromXML(tinyxml2::XMLElement* element)
+void Collision::_DeserializeFromXML(tinyxml2::XMLElement* element)
 {
 	element->QueryBoolAttribute("showRec", &m_isShowRec);
 	element->QueryFloatAttribute("x", &m_collisionRec.x);
@@ -43,7 +43,7 @@ void Collision::DeserializeFromXML(tinyxml2::XMLElement* element)
 		element->QueryIntAttribute(("mask" + std::to_string(i)).c_str(), &mask);
 		m_masks.push_back(mask);
 	}
-	Node::DeserializeFromXML(element);
+	Node::_DeserializeFromXML(element);
 }
 
 void Collision::_ShowInspector()

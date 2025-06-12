@@ -41,7 +41,7 @@ void Node::_ShowInspector()
 	}
 }
 
-void Node::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
+void Node::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc)
 {
 	element->SetAttribute("name", m_name.c_str());
 	element->SetAttribute("path", m_path.GetPath().c_str());
@@ -49,12 +49,12 @@ void Node::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* 
 
 	for (auto child : m_childs) {
 		tinyxml2::XMLElement* childElement = doc->NewElement(child->GetType().c_str());
-		child->SerializeToXML(childElement, doc);
+		child->_SerializeToXML(childElement, doc);
 		element->InsertEndChild(childElement);
 	}
 }
 
-void Node::DeserializeFromXML(tinyxml2::XMLElement* element)
+void Node::_DeserializeFromXML(tinyxml2::XMLElement* element)
 {
 	const char* nameAttr = element->Attribute("name");
 	if (nameAttr) {
@@ -72,20 +72,19 @@ void Node::DeserializeFromXML(tinyxml2::XMLElement* element)
 
 		const char* tagName = childElement->Attribute("type");
 		Node* childNode = NodeFactory::Create(tagName);
-		childNode->DeserializeFromXML(childElement);
+		childNode->_DeserializeFromXML(childElement);
 		AddChild(childNode);
 	}
 }
 
 void Node::Init()
 {
-	printf("Init %s\n", m_path.GetPath().c_str());
 	// Construct the path based on the parent's path
 	if (m_parent) {
 		m_path.SetPath(m_parent->m_path.GetPath() + "/" + m_name);
 	}
 	else {
-		m_path.SetPath(m_name); // Root node's path is its own name
+		m_path.SetPath(m_name);
 	}
 
 	_Init();
@@ -96,7 +95,6 @@ void Node::Init()
 
 void Node::Ready()
 {
-	printf("Ready %s\n", m_path.GetPath().c_str());
 	for (auto child : m_childs) {
 		child->Ready();
 	}
@@ -116,7 +114,7 @@ void Node::Update(float deltaTime)
 	}
 
 	for (auto child : m_childs) {
-		if (child->m_isDestroyed) continue; // Skip destroyed nodes
+		if (child->m_isDestroyed) continue;
 		child->Update(deltaTime);
 	}
 	_Update(deltaTime);
@@ -137,7 +135,7 @@ void Node::Render()
 {
 	_Render();
 	for (auto child : m_childs) {
-		if (child->m_isDestroyed) continue; // Skip destroyed nodes
+		if (child->m_isDestroyed) continue;
 		child->Render();
 	}
 }
@@ -151,10 +149,9 @@ void Node::SetName(const std::string& name)
 		m_path.SetPath(m_parent->m_path.GetPath() + "/" + this->m_name);
 	}  
 	else {  
-		m_path.SetPath(this->m_name); // Root node's path is its own name  
+		m_path.SetPath(this->m_name);
 	}  
 
-	// Update the paths of all child nodes recursively  
 	for (auto child : m_childs) {  
 		child->SetName(child->GetName());  
 	}  
@@ -188,9 +185,8 @@ SceneTree* Node::GetRoot()
 std::string Node::GetType()
 {
 	std::string name = typeid(*this).name();
-	std::string prefix = "class ";  // or "struct "
+	std::string prefix = "class ";
 
-	// Remove "class " prefix if present
 	if (name.compare(0, prefix.length(), prefix) == 0) {
 		name = name.substr(prefix.length());
 	}
@@ -200,11 +196,10 @@ std::string Node::GetType()
 
 void Node::ValidateName(std::string& name)
 {
-	// Check if the name is empty
 	if (name.empty()) {
 		name = GetType();
 	}
-    // Check if the name is already taken by another child of the parent
+
     if (m_parent) {
        auto it = std::find_if(m_parent->m_childs.begin(), m_parent->m_childs.end(), [&](Node* sibling) {
            return sibling != this && sibling->GetName() == name;
@@ -235,16 +230,13 @@ void Node::AddChild(Node* child)
 		child->SetRoot(m_root);
 	}
 
-	// Validate the name to ensure it's unique among siblings
 	child->SetName(child->m_name);
 	m_childs.push_back(child);
 
-	// dynamically init the child node
 	if (MainLoop::GetInstance()->IsRunning())
 	{
 		m_pendingInitNodes.push_back(child);
 	}
-	// if the main loop is not running, we can call Init and Ready directly
 	else
 	{
 		child->Init();
@@ -273,7 +265,6 @@ void Node::RemoveChild(Node* child)
 
 Node* Node::GetNode(const NodePath& path)
 {
-   // Split the relative path into parts
    std::string relativePath = path.GetPath();
    std::istringstream stream(relativePath);
    std::string segment;
@@ -281,20 +272,18 @@ Node* Node::GetNode(const NodePath& path)
 
    while (std::getline(stream, segment, '/')) {
        if (segment == "..") {
-           // Move to the parent node
            currentNode = currentNode->m_parent;
            if (!currentNode) {
-               return nullptr; // Invalid path
+               return nullptr;
            }
        } else if (segment != "." && !segment.empty()) {
-           // Search for the child node with the matching name
            auto it = std::find_if(
                currentNode->m_childs.begin(),
                currentNode->m_childs.end(),
                [&segment](Node* child) { return child->GetName() == segment; });
 
            if (it == currentNode->m_childs.end()) {
-               return nullptr; // Node not found
+               return nullptr;
            }
            currentNode = *it;
        }
@@ -354,7 +343,6 @@ bool Node::isDestroyed()
 void Node::Destroy()
 {
 	_Destroy();
-	printf("Destroy %s\n", m_path.GetPath().c_str());
 	for (auto child : m_childs) {
 		child->Destroy();
 		delete child;
@@ -391,7 +379,7 @@ void Node::SaveAsScene(const std::string& filePath)
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLElement* root = doc.NewElement("Scene");
 	doc.InsertFirstChild(root);
-	SerializeToXML(root, &doc);
+	_SerializeToXML(root, &doc);
 	tinyxml2::XMLError result = doc.SaveFile(filePath.c_str());
 	if (result != tinyxml2::XML_SUCCESS) {
 		printf("Error saving scene to XML: %s\n", doc.ErrorName());

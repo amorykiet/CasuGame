@@ -23,8 +23,8 @@ public:
 	virtual void _Destroy();
 
 	virtual void _ShowInspector();
-	virtual void SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc);
-	virtual void DeserializeFromXML(tinyxml2::XMLElement* element);
+	virtual void _SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc);
+	virtual void _DeserializeFromXML(tinyxml2::XMLElement* element);
 
 	void Init();
 	void Ready();

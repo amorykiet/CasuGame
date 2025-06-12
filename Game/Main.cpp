@@ -1,14 +1,6 @@
 #include "MainLoop.h"
 #include "SceneTree.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "World.h"
-
 #include "Editor.h"
-
-#include "raylib.h"
-#include "rlImGui.h"
-#include "imgui.h"
 
 //#define USE_EDITOR
 

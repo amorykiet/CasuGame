@@ -2,18 +2,16 @@
 #include "manager/InputManager.h"
 #include "SceneTree.h"
 #include "Enemy.h"
-#include "Collision.h"
 #include "MainLoop.h"
 #include "manager/RenderManager.h"
-#include "manager/CollisionManager.h"
 
 
-void World::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
-	Node::SerializeToXML(element, doc);
+void World::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
+	Node::_SerializeToXML(element, doc);
 }
 
-void World::DeserializeFromXML(tinyxml2::XMLElement* element) {
-	Node::DeserializeFromXML(element);
+void World::_DeserializeFromXML(tinyxml2::XMLElement* element) {
+	Node::_DeserializeFromXML(element);
 }
 
 void World::_Ready()
@@ -99,6 +97,5 @@ void World::_Update(float dt) {
 void World::OnPlayerHit()
 {
 	RemoveChild(player);
-	// Reset player position
 	isPlaying = false;
 }

@@ -1,5 +1,5 @@
 #include "SceneTree.h"
-#include <tinyxml2.h> //XML handling
+#include <tinyxml2.h>
 
 void SceneTree::AddScene(Scene* scene)
 {
@@ -68,7 +68,7 @@ void SceneTree::SaveCurrentSceneToXML(const std::string& filePath)
     tinyxml2::XMLElement* root = doc.NewElement("Scene");
     doc.InsertFirstChild(root);
 
-    currentScene->SerializeToXML(root, &doc);
+    currentScene->_SerializeToXML(root, &doc);
 
     // Save to file
     tinyxml2::XMLError result = doc.SaveFile(filePath.c_str());
@@ -107,7 +107,7 @@ bool SceneTree::LoadSceneFromXML(const std::string& filePath)
 	currentScene = NodeFactory::Create(tagName);
 	if (currentScene)
 	{
-		currentScene->DeserializeFromXML(root);
+		currentScene->_DeserializeFromXML(root);
 		currentScene->SetRoot(this);
 		return true;
 	}
@@ -131,7 +131,7 @@ Node* SceneTree::LoadNodeFromScene(const std::string& filePath)
 	{
 		const char* tagName = root->Attribute("type");
 		Node* node = NodeFactory::Create(tagName);
-		node->DeserializeFromXML(root);
+		node->_DeserializeFromXML(root);
 		return node;
 	}
 	else

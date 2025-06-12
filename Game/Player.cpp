@@ -6,18 +6,18 @@
 
 #include "imgui.h"
 
-void Player::SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
+void Player::_SerializeToXML(tinyxml2::XMLElement* element, tinyxml2::XMLDocument* doc) {
 	element->SetAttribute("x", position.x);
 	element->SetAttribute("y", position.y);
 	element->SetAttribute("size", size);
-	Node::SerializeToXML(element, doc);
+	Node::_SerializeToXML(element, doc);
 }
 
-void Player::DeserializeFromXML(tinyxml2::XMLElement* element) {
+void Player::_DeserializeFromXML(tinyxml2::XMLElement* element) {
 	element->QueryFloatAttribute("x", &position.x);
 	element->QueryFloatAttribute("y", &position.y);
 	element->QueryFloatAttribute("size", &size);
-	Node::DeserializeFromXML(element);
+	Node::_DeserializeFromXML(element);
 }
 
 void Player::_ShowInspector()
@@ -43,7 +43,7 @@ void Player::_Ready() {
 }
 
 void Player::_Update(float dt) {
-	//move
+	//movement logic
 	if (InputManager::GetInstance()->IsKeyDown(KEY_W)) {
 		position.y -= 100 * dt;
 	}

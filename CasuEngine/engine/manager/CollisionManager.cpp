@@ -13,10 +13,10 @@ void CollisionManager::Update()
 	// Check for collisions
 	for (Collision* current : m_collisions)
 	{
-		if (current->isDestroyed()) continue; // Skip destroyed
+		if (current->isDestroyed()) continue;
 		for (Collision* target: m_collisions)
 		{
-			if (target->isDestroyed()) continue; // Skip destroyed
+			if (target->isDestroyed()) continue;
 			if (current == target) continue;
 			if (current->CheckCollision(*target))
 			{
@@ -26,7 +26,7 @@ void CollisionManager::Update()
 				// Collision Enter
 				if (m_lastCollisions.find(pair) == m_lastCollisions.end())
 				{
-					current->OnCollisionEnter(*target); // or onCollisionEnter
+					current->OnCollisionEnter(*target);
 				}
 			}
 		}
@@ -35,7 +35,7 @@ void CollisionManager::Update()
 	// Collision Release
 	for (const auto& pair : m_lastCollisions)
 	{
-		if (pair.first->isDestroyed() || pair.second->isDestroyed()) continue; // Skip destroyed
+		if (pair.first->isDestroyed() || pair.second->isDestroyed()) continue;
 		if (currentCollisions.find(pair) == currentCollisions.end())
 		{
 			if (pair.first->CheckMask(pair.second->GetLayer()))
