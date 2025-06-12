@@ -198,6 +198,24 @@ void Editor::ShowNodeContextMenu()
             }
         }
         ImGui::Separator();
+
+		// load node from scene file to add as child
+		static char loadNodeBuffer[256] = "";
+		ImGui::InputText("Scene Name", loadNodeBuffer, sizeof(loadNodeBuffer));
+		ImGui::SameLine();
+        if (ImGui::Button("Add Scene")) {
+            if (m_contextNode) {
+                std::string filePath = std::string(GAME_SCENE_FOLDER) + loadNodeBuffer + ".scene";
+                Node* loadedNode = SceneTree::GetInstance()->LoadNodeFromScene(filePath);
+                if (loadedNode) {
+                    m_contextNode->AddChild(loadedNode);
+                    m_selectedNode = loadedNode;
+                    SceneTree::GetInstance()->SaveCurrentSceneToXML();
+                }
+            }
+        }
+        ImGui::Separator();
+
         //save as sceen with enter name
 		static char saveNameBuffer[256] = "";
 		ImGui::InputText("Name##Scene", saveNameBuffer, sizeof(saveNameBuffer));
