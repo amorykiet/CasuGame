@@ -52,6 +52,9 @@ void Enemy::_Ready() {
 		collision->AddOnCollisionEnterCallback(std::bind(&Enemy::OnCollisionEnter, this, std::placeholders::_1));
 		collisionOffset = collision->GetPosition();
     }
+	// randomize texture
+	int randomTextureIndex = GetRandomValue(0, 3);
+	texturePath = "assets/texture/enemies/enemy" + std::to_string(randomTextureIndex) + ".png";
 }
 
 void Enemy::_Update(float dt) {
@@ -79,7 +82,7 @@ void Enemy::_Render() {
 #ifdef USE_TEXTURE
 	float rotation = Vector2Angle(RVector2(0, -1), direction) * (180.0f / PI);
 
-	RenderManager::GetInstance()->DrawTexturePro("assets/texture/enemy.png",
+	RenderManager::GetInstance()->DrawTexturePro(texturePath,
 		RRectangle(0, 0, 128, 128),
 		RRectangle(position.x, position.y, size, size),
 		RVector2(size/2, size/8),

@@ -28,6 +28,7 @@ public:
     void OnCollisionEnter(Collision& other);
 
 private:
+	std::string texturePath = "assets/texture/enemies/enemy0.png";
     Collision* collision;
 	RVector2 position;
     RVector2 collisionOffset;
