@@ -107,6 +107,7 @@ void Node::Update(float deltaTime)
 	if (!m_pendingInitNodes.empty())
 	{
 		for (Node* node : m_pendingInitNodes) {
+			if (node->isDestroyed()) continue;
 			node->Init();
 			node->Ready();
 		}
