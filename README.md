@@ -4,13 +4,21 @@ A simple game engine i made as solo developer inspired by Godot Engine in 3 mont
 
 This game engine was developed as a learning project. While it may be functional, it may contain issues or limitations. Use it at your own discretion and risk.
 
-# Requirement
+## Feature
 
-- Visual Studio 2022 with `Desktop development with C++` workload
+- **Visual scene creation and editing** using an intuitive **node-based system**.
+- **User-friendly Editor interface**.
+- **2D graphics rendering**: supports drawing shapes, textures, text and fragment shader-based **post processing**.
+- **Audio playback**: supports background music and sound effects in **WAV, OGG, MP3**, and other formats.
+- **Keyboard and mouse input handling**.
+- **Basic collision detection**: support layer-mask mechanism.
+- **Resource management** for images, sounds, shader, and XML-based configurations.
+- **Minimalist game loop**, designed to be **easy to extend and customize**.
 
 # How to Use
 
-Simply open the `MyGameEngine.sln` file to get started.
+- Install Visual Studio 2022 with `Desktop development with C++` workload
+- Simply open the `MyGameEngine.sln` file to get started.
 
 ## Solution Structure
 
